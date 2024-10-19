@@ -17,11 +17,11 @@ export const dateTimeFormat = 'DD/MM/YYYY HH:mm:ss';
 
 export type IUser = Omit<
   User,
-  'password' | 'token' | 'created_at' | 'updated_at'
+  'password' | 'token' | 'created_at' | 'updated_at' | 'verification_code'
 >;
 export type UserWithoutPassword = Omit<
   User,
-  'password' | 'created_at' | 'updated_at'
+  'password' | 'created_at' | 'updated_at' | 'verification_code'
 >;
 
 export interface Country {

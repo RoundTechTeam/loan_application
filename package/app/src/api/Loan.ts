@@ -17,4 +17,7 @@ export default {
   async updateLoan(dto: LoanDto) {
     await Api.client('/loan').patch('', dto);
   },
+  async deleteLoan(loan_id: number) {
+    await Api.client('/loan').delete(`/${loan_id}`);
+  },
 };

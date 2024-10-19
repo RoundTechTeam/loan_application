@@ -32,6 +32,13 @@ function authGuard(): true | string {
   return true;
 }
 
+function adminGuard(): true | string {
+  const user = useUserStore();
+  if (!user.isAdmin) return AppRoute.UserDashboard;
+
+  return true;
+}
+
 function authorizedGuard(): true | string {
   const user = useUserStore();
 
@@ -81,7 +88,7 @@ const routes: RouteRecordRaw[] = [
     path: '/admin',
     component: () => import('src/layouts/AdminLayout.vue'),
     meta: {
-      guards: [authGuard],
+      guards: [adminGuard],
     },
     children: [
       {
@@ -131,8 +138,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/loan-application',
         name: AppRoute.UserLoanApplication,
-        component: () =>
-          import('pages/business_owner/loan_application/Index.vue'),
+        component: () => import('pages/loan_application/Index.vue'),
       },
     ],
   },

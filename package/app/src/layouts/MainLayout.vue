@@ -17,7 +17,7 @@ const sidebarItems = computed<NavigationItem[]>(() => {
     {
       title: 'Dashboard',
       icon: 'home',
-      route: AppRoute.UserProfile,
+      route: AppRoute.UserDashboard,
     },
     {
       title: 'Loan',

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { db } from '~api/db';
-import { LoanApplicationDetail } from '~libs/entities';
+import { IUser, LoanApplicationDetail } from '~libs/entities';
 import { LoanDto } from './loan.dto';
 
 @Injectable()
@@ -37,8 +37,11 @@ export class LoanService {
     return await db.loan.findMany();
   }
 
-  async getLoanApplications(): Promise<LoanApplicationDetail[]> {
+  async getLoanApplications(user: IUser): Promise<LoanApplicationDetail[]> {
     return await db.loanApplication.findMany({
+      where: {
+        user_id: user.is_admin ? undefined : user.id,
+      },
       include: {
         applied_by: {
           select: {
@@ -84,6 +87,24 @@ export class LoanService {
         is_malaysia_company: dto.is_malaysia_company,
         instalment_tenure_year: dto.instalment_tenure_year,
         interest_rate: dto.interest_rate,
+      },
+    });
+  }
+
+  async deleteLoan(loan_id: number) {
+    const loan = await db.loan.findFirst({
+      where: {
+        id: loan_id,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (!loan) throw new BadRequestException('Loan not found');
+
+    await db.loan.delete({
+      where: {
+        id: loan_id,
       },
     });
   }

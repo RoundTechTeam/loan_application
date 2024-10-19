@@ -5,11 +5,12 @@ import { Api } from 'src/api';
 import { AppTable, IconButton, PrimaryButton } from 'src/components';
 import { TableColumn } from 'src/components/type';
 import { useLoading } from 'src/composable';
+import { prompt } from 'src/plugins';
 import { computed, onMounted, ref } from 'vue';
 import { dateFormat, Loan } from '~libs/entities';
 import LoanDialog from './dialog/LoanDialog.vue';
 
-const { loading, run } = useLoading();
+const { loading, run, toast } = useLoading();
 
 const data = ref<Loan[]>([]);
 const columns = computed<TableColumn<Loan>[]>(() => [
@@ -64,6 +65,26 @@ function updateLoan(loan: Loan) {
   }).onOk(() => fetchLoans());
 }
 
+function deleteLoan(loan: Loan) {
+  prompt
+    .deleteConfirmation({
+      title: 'Delete Loan',
+      message: `Are you sure you want to delete ${loan.name}?`,
+    })
+    .onOk(() => {
+      toast(
+        async () => {
+          await Api.Loan.deleteLoan(loan.id);
+        },
+        {
+          isLoading: loading,
+          message: 'Deleting...',
+          successMessage: 'Deleted successfully',
+        }
+      );
+    });
+}
+
 function fetchLoans() {
   run(
     async () => {
@@ -91,8 +112,9 @@ onMounted(() => fetchLoans());
         }"
       >
         <template #actions="{ row }">
-          <q-td>
+          <q-td class="row">
             <IconButton @click="updateLoan(row)" icon="edit" />
+            <IconButton @click="deleteLoan(row)" icon="delete" color="red" />
           </q-td>
         </template>
       </AppTable>

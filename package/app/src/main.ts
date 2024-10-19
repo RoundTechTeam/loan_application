@@ -34,6 +34,7 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { useUserStore } from './stores/user';
 
 // init global pinia store
 const pinia = createPinia();
@@ -68,6 +69,7 @@ async function registerVue(): Promise<App> {
   const app = createApp(MainApp);
   app.use(pinia);
   try {
+    await useUserStore().refetch();
     console.log('initApp');
   } catch (e) {
     console.error(e);
