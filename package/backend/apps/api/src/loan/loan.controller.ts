@@ -32,7 +32,7 @@ export class LoanController {
 
   @Post('aiScan')
   async aiScan(@Body() dto: string, @GetUser() user: IUser) {
-    await this.loanService.aiScan(dto, user.id);
+    return await this.loanService.aiScan(dto, user.id);
   }
 
   @Get()

@@ -17,9 +17,11 @@ export default {
     return getData<Loan[]>(await Api.client('/loan').get(''));
   },
 
-  async generateAiMatchingColumn(dto: string): Promise<LoanApplicationDto> {
-    return getData<LoanApplicationDto>(
-      await Api.client('/loan').post('/aiScan', dto)
+  async aiScanDocument(dto: string): Promise<string> {
+    return getData<string>(
+      await Api.client('/loan').post('/aiScan', dto, {
+        timeout: 30000,
+      })
     );
   },
 

@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import axios from 'axios';
 import fs from 'fs/promises';
 import OpenAI from 'openai';
+import path from 'path';
 import pdfPoppler from 'pdf-poppler';
 import Tesseract, { RecognizeResult } from 'tesseract.js';
 import { db } from '~api/db';
@@ -90,25 +92,35 @@ export class LoanService {
                      ##Response
                      Please provide me the important information from the ${text}.
   
-                     ##Result
-                     Here is the result:
+                     ##Result            
+                      Must be return the result JSON format.
+                     
+                      ##Example
+                      {
                       'Company Name': '',
                       'Company Incorporation Date': '',
                       'Company Type': '',
                       'Retain Earning': '',
                       'Revenue': '',
+                      }
+
                     `;
 
-    const stream = await openai.chat.completions.create({
+    const responese = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: content }],
-      stream: true,
     });
-    for await (const chunk of stream) {
-      process.stdout.write(chunk.choices[0]?.delta?.content || '');
-    }
 
-    return stream;
+    console.log(responese.choices[0].message.content);
+
+    return responese.choices[0].message.content;
+
+    // for await (const chunk of stream) {
+    //   console.log(chunk);
+    //   process.stdout.write(chunk.choices[0]?.delta?.content || '');
+    // }
+
+    // return stream;
   }
 
   async aiScan(filePath: string, user_id: number) {
@@ -130,8 +142,31 @@ export class LoanService {
       `../../../../backend/apps/api/src/ai-generator/image/generator-image`,
     );
 
-    if (filePath.endsWith('.pdf')) {
-      const newFileName = path.basename(filePath, path.extname(filePath));
+    const fileLocation = Object.keys(filePath)[0];
+
+    if (fileLocation.endsWith('.pdf')) {
+      const response = await axios.get(fileLocation, {
+        responseType: 'arraybuffer',
+      });
+
+      const saveFolder = path.resolve(
+        __dirname,
+        `../../../../backend/apps/api/src/ai-generator/image`,
+      );
+
+      const filePath = path.join(saveFolder, 'test.pdf');
+
+      await fs.writeFile(filePath, response.data);
+
+      const filePathLocation = path.resolve(
+        __dirname,
+        `../../../../backend/apps/api/src/ai-generator/image/test.pdf`,
+      );
+
+      const newFileName = path.basename(
+        filePathLocation,
+        path.extname(filePathLocation),
+      );
 
       const opts = {
         format: 'png',
@@ -140,7 +175,7 @@ export class LoanService {
         page: null,
       };
 
-      await pdfPoppler.convert(filePath, opts).then(async () => {
+      await pdfPoppler.convert(filePathLocation, opts).then(async () => {
         for (let i = 0; i < 15; i++) {
           const fileName = path.resolve(
             __dirname,
@@ -160,7 +195,7 @@ export class LoanService {
         }
       });
     } else {
-      images.push(filePath);
+      images.push(fileLocation);
     }
 
     const textToSubmit = [];
@@ -170,12 +205,13 @@ export class LoanService {
         image,
         'eng', // Use English language
       ).then(async (result: RecognizeResult) => {
-        console.log(result.data.text);
         textToSubmit.push(result.data.text);
       });
     }
 
-    await this.sendToChatGpt(textToSubmit.join(','));
+    const resp = await this.sendToChatGpt(textToSubmit.join(','));
+
+    return resp;
   }
 
   async getLoans() {

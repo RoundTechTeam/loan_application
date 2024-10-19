@@ -136,6 +136,7 @@ model LoanApplication {
   loan_id              Int?
   loan_applied_at      DateTime?
   status               ApplicationStatus @default(PENDING)
+  file_image_path      String?
   business_name        String
   company_type         CompanyType
   is_malaysia_company  Boolean

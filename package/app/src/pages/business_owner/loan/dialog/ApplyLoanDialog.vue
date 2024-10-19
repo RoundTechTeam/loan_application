@@ -25,7 +25,7 @@ const props = defineProps({
 const { dialogRef, emitData } = useDialog();
 const { loading, toast } = useLoading();
 const company_document_file = useFile({
-  extensions: ['jpg', 'jpeg', 'png'],
+  extensions: ['jpg', 'jpeg', 'png', 'pdf'],
   maxBytes: 1000000,
 });
 
@@ -36,16 +36,36 @@ const state = ref<LoanApplicationDto>({
   loan_id: props.loan.id,
   operation_year: 0,
   business_name: '',
+  file_image_path: '',
 });
+
+const test = ref([]);
+
+async function aiScanDocument() {
+  if (!company_document_file.file.value) return;
+
+  if (company_document_file.file.value) {
+    const [url] = await Api.Store.upload([company_document_file.file.value]);
+
+    state.value.file_image_path = url;
+  }
+
+  const result = await Api.Loan.aiScanDocument(state.value.file_image_path);
+
+  const regex = /\{([^}]+)\}/g;
+  const matches = [];
+  let match;
+
+  while ((match = regex.exec(result)) !== null) {
+    matches.push(match[1]);
+  }
+
+  test.value = matches;
+}
 
 async function submit() {
   if (!company_document_file.file.value)
     return notify.error('No file selected');
-
-  if (company_document_file.file.value) {
-    const [url] = await Api.Store.upload([company_document_file.file.value]);
-    console.log('url', url);
-  }
 
   prompt
     .warningConfirmation({
@@ -76,6 +96,10 @@ async function submit() {
     @submit="submit"
   >
     <div class="q-gutter-y-md">
+      {{ test }}
+      <AppForm title="Loan Name">
+        <div>{{ loan.name }}</div>
+      </AppForm>
       <AppForm title="Upload Document" required>
         <q-file
           outlined
@@ -88,14 +112,12 @@ async function submit() {
           :error-message="company_document_file.error.value || undefined"
           @rejected="company_document_file.handleError"
           v-model="company_document_file.file.value"
+          @update:model-value="() => aiScanDocument()"
         >
           <template v-slot:prepend>
             <q-icon name="attach_file" @click.stop.prevent />
           </template>
         </q-file>
-      </AppForm>
-      <AppForm title="Loan Name">
-        <div>{{ loan.name }}</div>
       </AppForm>
 
       <TextInput v-model="state.business_name" title="Business Name" required />
