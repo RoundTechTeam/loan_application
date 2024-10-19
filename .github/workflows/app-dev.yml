@@ -1,0 +1,42 @@
+name: Publish App Dev
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - app-dev-v*
+    paths:
+      - package/app/**
+jobs:
+  deploy:
+    name: Preview App
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Nodejs and yarn with cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        working-directory: "packages"
+        run: cd backend && pnpm i && cd ../app && pnpm i
+
+      - name: Build
+        working-directory: "package/app"
+        run: pnpm run build:dev
+
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: "package/app/dist"
+          command: pages publish spa --project-name=loan-application-dev --commit-hash $GITHUB_SHA --branch main
