@@ -17,6 +17,7 @@ const user = useUserStore();
 const app = useAppStore();
 const router = useRouter();
 
+const hover = ref(false);
 const loginDto = reactive<{
   phone: PhoneDetails;
   password: string;
@@ -53,6 +54,12 @@ async function login() {
       successMessage: 'Login successful',
     }
   );
+}
+
+function signUp() {
+  router.push({
+    name: AppRoute.Register,
+  });
 }
 </script>
 
@@ -116,6 +123,21 @@ async function login() {
     <div class="column q-gutter-y-sm">
       <div class="text-center text-subtitle1"></div>
       <q-separator />
+
+      <div class="column">
+        <div class="text-center text-subtitle1">
+          <p @click="signUp">
+            Sign up for a
+            <span
+              @mouseover="hover = true"
+              @mouseleave="hover = false"
+              :class="hover ? 'text-blue-6' : 'text-primary'"
+              class="text-weight-bold cursor-pointer"
+              >Demo Account</span
+            >
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>

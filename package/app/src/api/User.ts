@@ -8,11 +8,6 @@ export default {
   async register(dto: RegisterUserDto): Promise<number> {
     return (await Api.client('/auth', false).post('/register', dto)).status;
   },
-  async fetchUser() {
-    return getData<UserWithoutPassword>(
-      await Api.client('/auth').get('/profile')
-    );
-  },
   async login(dto: LoginUserDto) {
     return getData<ApiResponse<{ token: string }>>(
       await Api.client('/auth', false).post('/login', dto)
@@ -20,5 +15,18 @@ export default {
   },
   async logout() {
     await Api.client('/auth').post('/logout');
+  },
+  async verifyUserAccount(dto: { verificationCode: number }): Promise<boolean> {
+    return getData<boolean>(
+      await Api.client('/auth').post('/verify-user-account', dto)
+    );
+  },
+  async resendCode(): Promise<void> {
+    return await Api.client('/auth').put('/resend-code');
+  },
+  async fetchUser() {
+    return getData<UserWithoutPassword>(
+      await Api.client('/auth').get('/profile')
+    );
   },
 };

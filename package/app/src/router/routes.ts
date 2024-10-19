@@ -11,6 +11,7 @@ export enum AppRoute {
   //Login
   Login = 'Login',
   Register = 'Register',
+  Verified = 'Verified',
   Logout = 'Logout',
 
   //General
@@ -23,17 +24,32 @@ export enum AppRoute {
 
 function authGuard(): true | string {
   const user = useUserStore();
-  console.log('Guard: Not Logged In');
+  console.log('AuthorizedGuard - user.isLoggedIn', user.isLoggedIn);
+  console.log(
+    'AuthorizedGuard - user.currentUser.is_verified',
+    user.isVerified
+  );
   if (!user.isLoggedIn) return AppRoute.Login;
+  console.log('Guard: Logged In but not Verified');
+  if (!user.isVerified) return AppRoute.Verified;
   return true;
 }
 
 function authorizedGuard(): true | string {
   const user = useUserStore();
+  console.log('AuthorizedGuard - user.isLoggedIn', user.isLoggedIn);
+  console.log(
+    'AuthorizedGuard - user.currentUser.is_verified',
+    user.isVerified
+  );
 
   if (user.isLoggedIn) {
-    console.log('Guard: Going To Dashboard');
+    if (!user.isVerified) {
+      return AppRoute.Verified;
+    }
     return AppRoute.Dashboard;
+  } else if (!user.isLoggedIn) {
+    return AppRoute.Login;
   }
 
   // return { route: true };
@@ -103,11 +119,18 @@ const routes: RouteRecordRaw[] = [
     path: '/register',
     name: AppRoute.Register,
     meta: {
-      guards: [authorizedGuard],
+      guards: [],
     },
     component: () => import('pages/auth/Register.vue'),
   },
-
+  {
+    path: '/verfied',
+    name: AppRoute.Verified,
+    meta: {
+      guards: [authorizedGuard],
+    },
+    component: () => import('pages/auth/Verfied.vue'),
+  },
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),

@@ -24,6 +24,8 @@ export class AuthService {
       is_delete: userSession.User.is_delete,
       contact_no: userSession.User.contact_no,
       country_code: userSession.User.country_code,
+      is_verified: userSession.User.is_verified,
+      verification_code: userSession.User.verification_code,
     };
   }
 }
