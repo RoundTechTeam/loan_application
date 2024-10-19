@@ -36,18 +36,18 @@ enum ECountryCodeP {
 }
 
 model User {
-  id              Int               @id @default(autoincrement())
-  full_name       String            @db.VarChar(255)
-  password        String            @db.Text
-  contact_no      String            @db.VarChar(255)
-  country_code    ECountryCodeP     @default(MY)
-  is_admin        Boolean           @default(false)
-  is_delete       Boolean           @default(false)
-  created_at      DateTime          @default(now())
-  updated_at      DateTime?         @updatedAt
-  Sessions        UserSession[]
-  LoanApplication LoanApplication[]
-  FundManager     FundManager?
+  id               Int               @id @default(autoincrement())
+  full_name        String            @db.VarChar(255)
+  password         String            @db.Text
+  contact_no       String            @db.VarChar(255)
+  country_code     ECountryCodeP     @default(MY)
+  is_admin         Boolean           @default(false)
+  is_delete        Boolean           @default(false)
+  created_at       DateTime          @default(now())
+  updated_at       DateTime?         @updatedAt
+  Sessions         UserSession[]
+  LoanApplications LoanApplication[]
+  FundManager      FundManager?
 
   @@map("users")
 }
@@ -74,7 +74,7 @@ model Business {
   is_malaysia_company Boolean           @default(true)
   created_at          DateTime          @default(now())
   updated_at          DateTime?         @updatedAt
-  FinancialRecord     FinancialRecord[]
+  FinancialRecords    FinancialRecord[]
 
   @@map("businesses")
 }
@@ -104,13 +104,13 @@ model FinancialRecord {
 }
 
 model FundManager {
-  id              Int               @id @default(autoincrement())
-  user_id         Int               @unique
-  maximum_fund    Float
-  created_at      DateTime          @default(now())
-  updated_at      DateTime?         @updatedAt
-  User            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  LoanApplication LoanApplication[]
+  id               Int               @id @default(autoincrement())
+  user_id          Int               @unique
+  maximum_fund     Float
+  created_at       DateTime          @default(now())
+  updated_at       DateTime?         @updatedAt
+  User             User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  LoanApplications LoanApplication[]
 
   @@map("fund_managers")
 }
