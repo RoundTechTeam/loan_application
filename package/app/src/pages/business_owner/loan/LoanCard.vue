@@ -4,6 +4,7 @@ import { IconButton, PrimaryButton } from 'src/components';
 import { PropType } from 'vue';
 import { Loan } from '~libs/entities';
 import LoanDialog from './dialog/LoanDialog.vue';
+import ApplyLoanDialog from './dialog/ApplyLoanDialog.vue';
 
 const props = defineProps({
   loan: {
@@ -19,6 +20,15 @@ const props = defineProps({
 function viewLoan() {
   Dialog.create({
     component: LoanDialog,
+    componentProps: {
+      loan: props.loan,
+    },
+  });
+}
+
+function applyLoan() {
+  Dialog.create({
+    component: ApplyLoanDialog,
     componentProps: {
       loan: props.loan,
     },
@@ -42,7 +52,7 @@ function viewLoan() {
           <div class="text-black text-h6 text-bold">
             {{ loan.name }}
           </div>
-          <PrimaryButton label="Apply" />
+          <PrimaryButton label="Apply" @click="applyLoan" />
         </div>
       </div>
     </q-img>

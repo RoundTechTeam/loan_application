@@ -110,11 +110,13 @@ onMounted(() => fetchLoans());
           columns,
           data,
         }"
+        :loading="loading"
+        style="height: 75vh"
       >
         <template #actions="{ row }">
           <q-td class="row">
             <IconButton @click="updateLoan(row)" icon="edit" />
-            <IconButton @click="deleteLoan(row)" icon="delete" color="red" />
+            <!-- <IconButton @click="deleteLoan(row)" icon="delete" color="red" /> -->
           </q-td>
         </template>
       </AppTable>
