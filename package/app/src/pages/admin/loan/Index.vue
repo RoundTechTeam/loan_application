@@ -45,37 +45,7 @@ const columns = computed<TableColumn<Loan>[]>(() => [
     name: 'loan_amount',
     label: 'Loan Amount (Min - Max)',
     field: (v) => v,
-    //format: (v) => `${v.min_loan_amount} - ${v.max_loan_amount}`,
-  },
-  {
-    name: 'min_operation_year',
-    label: 'Min Operation Year',
-    field: (v) => v.min_operation_year,
-  },
-  {
-    name: 'valid_company_type',
-    label: 'Valid Company Type',
-    field: (v) => v.valid_company_type,
-  },
-  {
-    name: 'min_annual_sales',
-    label: 'Min Annual Sales',
-    field: (v) => v.min_annual_sales,
-  },
-  {
-    name: 'is_malaysia_company',
-    label: 'Is Malaysia Company',
-    field: (v) => v.is_malaysia_company,
-  },
-  {
-    name: 'instalment_tenure_year',
-    label: 'Instalment Tenure Year',
-    field: (v) => v.instalment_tenure_year,
-  },
-  {
-    name: 'interest_rate',
-    label: 'Interest Rate',
-    field: (v) => v.interest_rate,
+    format: (v) => `${v.mininum_loan_amount} - ${v.maximum_loan_amount}`,
   },
 ]);
 

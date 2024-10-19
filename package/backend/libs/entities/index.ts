@@ -13,6 +13,7 @@ import { ECountryCodeP } from './enums';
 export * from './pagination';
 
 export const dateFormat = 'DD/MM/YYYY';
+export const dateTimeFormat = 'DD/MM/YYYY HH:mm:ss';
 
 export type IUser = Omit<
   User,
@@ -33,6 +34,11 @@ export interface PhoneDetails {
   contact_no: string;
   country_code: ECountryCodeP;
 }
+
+export type LoanApplicationDetail = LoanApplication & {
+  applied_by: Pick<User, 'full_name' | 'country_code' | 'contact_no'>;
+  Loan: Pick<Loan, 'id' | 'name'>;
+};
 
 export {
   Business,

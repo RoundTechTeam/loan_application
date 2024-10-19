@@ -42,9 +42,14 @@ async function login() {
         loginDto.password
       );
       if (user.currentUser) {
-        router.push({
-          name: AppRoute.Dashboard,
-        });
+        if (user.isAdmin)
+          router.push({
+            name: AppRoute.AdminDashboard,
+          });
+        else
+          router.push({
+            name: AppRoute.UserDashboard,
+          });
       }
     },
     {

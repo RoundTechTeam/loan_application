@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { db } from '~api/db';
+import { LoanApplicationDetail } from '~libs/entities';
 import { LoanDto } from './loan.dto';
 
 @Injectable()
@@ -36,8 +37,24 @@ export class LoanService {
     return await db.loan.findMany();
   }
 
-  async getLoanApplications() {
-    return await db.loanApplication.findMany();
+  async getLoanApplications(): Promise<LoanApplicationDetail[]> {
+    return await db.loanApplication.findMany({
+      include: {
+        applied_by: {
+          select: {
+            full_name: true,
+            country_code: true,
+            contact_no: true,
+          },
+        },
+        Loan: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
   }
 
   async updateLoan(dto: LoanDto) {

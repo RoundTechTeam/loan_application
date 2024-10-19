@@ -13,17 +13,21 @@ export enum AppRoute {
   Register = 'Register',
   Logout = 'Logout',
 
-  //General
-  Dashboard = 'Dashboard',
-  Loan = 'Loan',
+  //Admin
+  AdminDashboard = 'AdminDashboard',
+  AdminProfile = 'Profile',
+  AdminLoan = 'AdminLoan',
+  AdminLoanApplication = 'AdminLoanApplication',
 
-  //Profile Settings
-  Profile = 'Profile',
+  //Business Owner
+  UserDashboard = 'UserDashboard',
+  UserLoan = 'UserLoan',
+  UserLoanApplication = 'UserLoanApplication',
+  UserProfile = 'UserProfile',
 }
 
 function authGuard(): true | string {
   const user = useUserStore();
-  console.log('Guard: Not Logged In');
   if (!user.isLoggedIn) return AppRoute.Login;
   return true;
 }
@@ -32,11 +36,9 @@ function authorizedGuard(): true | string {
   const user = useUserStore();
 
   if (user.isLoggedIn) {
-    console.log('Guard: Going To Dashboard');
-    return AppRoute.Dashboard;
+    if (user.currentUser?.is_admin) return AppRoute.AdminDashboard;
+    else return AppRoute.UserDashboard;
   }
-
-  // return { route: true };
 
   return true;
 }
@@ -76,6 +78,35 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/admin',
+    component: () => import('src/layouts/AdminLayout.vue'),
+    meta: {
+      guards: [authGuard],
+    },
+    children: [
+      {
+        path: '/dashboard',
+        name: AppRoute.AdminDashboard,
+        component: () => import('pages/admin/dashboard/Index.vue'),
+      },
+      {
+        path: '/loan',
+        name: AppRoute.AdminLoan,
+        component: () => import('pages/admin/loan/Index.vue'),
+      },
+      {
+        path: '/profile',
+        name: AppRoute.AdminProfile,
+        component: () => import('pages/profile/Index.vue'),
+      },
+      {
+        path: '/loan-application',
+        name: AppRoute.AdminLoanApplication,
+        component: () => import('pages/loan_application/Index.vue'),
+      },
+    ],
+  },
+  {
     path: '',
     component: () => import('src/layouts/MainLayout.vue'),
     meta: {
@@ -84,18 +115,24 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '/dashboard',
-        name: AppRoute.Dashboard,
-        component: () => import('pages/dashboard/Index.vue'),
-      },
-      {
-        path: '/loan',
-        name: AppRoute.Loan,
-        component: () => import('pages/loan/Index.vue'),
+        name: AppRoute.UserDashboard,
+        component: () => import('pages/business_owner/dashboard/Index.vue'),
       },
       {
         path: '/profile',
-        name: AppRoute.Profile,
+        name: AppRoute.UserProfile,
         component: () => import('pages/profile/Index.vue'),
+      },
+      {
+        path: '/loan',
+        name: AppRoute.UserLoan,
+        component: () => import('pages/business_owner/loan/Index.vue'),
+      },
+      {
+        path: '/loan-application',
+        name: AppRoute.UserLoanApplication,
+        component: () =>
+          import('pages/business_owner/loan_application/Index.vue'),
       },
     ],
   },

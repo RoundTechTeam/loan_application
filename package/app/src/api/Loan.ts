@@ -1,5 +1,5 @@
 import { LoanDto } from '~api/loan/loan.dto';
-import { Loan, LoanApplication } from '~libs/entities';
+import { Loan, LoanApplicationDetail } from '~libs/entities';
 import { Api, getData } from '.';
 
 export default {
@@ -10,7 +10,7 @@ export default {
     return getData<Loan[]>(await Api.client('/loan').get(''));
   },
   async getLoanApplications() {
-    return getData<LoanApplication[]>(
+    return getData<LoanApplicationDetail[]>(
       await Api.client('/loan').get('/applications')
     );
   },

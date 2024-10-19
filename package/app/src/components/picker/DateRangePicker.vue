@@ -55,6 +55,10 @@ defineProps({
       },
     ],
   },
+  format: {
+    type: String,
+    default: 'dd/MM/yyyy HH:mm:ss',
+  },
   maxDate: {
     type: Date,
     default: null,
@@ -97,6 +101,7 @@ const minutesArray = computed(() => {
     :preset-dates="preset"
     :max-date="maxDate"
     :teleport="true"
+    :format="format"
     :text-input="true"
   >
     <template v-if="timePicker" #time-picker="{ time, updateTime }">

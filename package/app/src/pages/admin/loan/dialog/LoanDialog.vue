@@ -30,8 +30,8 @@ const state = ref<LoanDto>(
   props.loan || {
     id: null,
     name: '',
-    start_at: new Date(),
-    end_at: new Date(),
+    start_at: dayjs().startOf('day').toDate(),
+    end_at: dayjs().endOf('day').toDate(),
     mininum_loan_amount: 0,
     maximum_loan_amount: 0,
     min_operation_year: 0,
@@ -165,7 +165,6 @@ function submit() {
         }"
       />
     </div>
-    {{ state }}
 
     <template #actions>
       <PrimaryButton label="Submit" type="submit" />
