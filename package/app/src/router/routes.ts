@@ -110,22 +110,22 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/dashboard',
+        path: 'dashboard',
         name: AppRoute.AdminDashboard,
         component: () => import('pages/admin/dashboard/Index.vue'),
       },
       {
-        path: '/loan',
+        path: 'loan',
         name: AppRoute.AdminLoan,
         component: () => import('pages/admin/loan/Index.vue'),
       },
       {
-        path: '/profile',
+        path: 'profile',
         name: AppRoute.AdminProfile,
         component: () => import('pages/profile/Index.vue'),
       },
       {
-        path: '/loan-application',
+        path: 'loan-application',
         name: AppRoute.AdminLoanApplication,
         component: () => import('pages/loan_application/Index.vue'),
       },
@@ -139,22 +139,22 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/dashboard',
+        path: 'dashboard',
         name: AppRoute.UserDashboard,
         component: () => import('pages/business_owner/dashboard/Index.vue'),
       },
       {
-        path: '/profile',
+        path: 'profile',
         name: AppRoute.UserProfile,
         component: () => import('pages/profile/Index.vue'),
       },
       {
-        path: '/loan',
+        path: 'loan',
         name: AppRoute.UserLoan,
         component: () => import('pages/business_owner/loan/Index.vue'),
       },
       {
-        path: '/loan-application',
+        path: 'loan-application',
         name: AppRoute.UserLoanApplication,
         component: () => import('pages/loan_application/Index.vue'),
       },
