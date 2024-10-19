@@ -5,6 +5,7 @@ import { PropType } from 'vue';
 import { Loan } from '~libs/entities';
 import ApplyLoanDialog from './dialog/ApplyLoanDialog.vue';
 import LoanDialog from './dialog/LoanDialog.vue';
+import ApplyLoanDialog from './dialog/ApplyLoanDialog.vue';
 
 const props = defineProps({
   loan: {
@@ -30,10 +31,7 @@ function applyLoan() {
   Dialog.create({
     component: ApplyLoanDialog,
     componentProps: {
-      loanApplicationDto: {
-        id: null,
-        loan_id: props.loan.id,
-      },
+      loan: props.loan,
     },
   });
 }
@@ -55,12 +53,7 @@ function applyLoan() {
           <div class="text-black text-h6 text-bold">
             {{ loan.name }}
           </div>
-          <PrimaryButton
-            label="Apply"
-            @click="applyLoan"
-            color="primary"
-            size="md"
-          />
+          <PrimaryButton label="Apply" @click="applyLoan" />
         </div>
       </div>
     </q-img>

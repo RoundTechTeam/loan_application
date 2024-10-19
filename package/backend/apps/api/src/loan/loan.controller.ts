@@ -9,7 +9,11 @@ import {
 } from '@nestjs/common';
 import { GetUser } from '~api/decorators';
 import { IUser } from '~libs/entities';
-import { LoanDto } from './loan.dto';
+import {
+  LoanApplicationDto,
+  LoanDto,
+  UpdateLoanApplicationDto,
+} from './loan.dto';
 import { LoanService } from './loan.service';
 
 @Controller('loan')
@@ -19,6 +23,11 @@ export class LoanController {
   @Post()
   async createLoan(@Body() dto: LoanDto) {
     await this.loanService.createLoan(dto);
+  }
+
+  @Post('application')
+  async applyLoan(@Body() dto: LoanApplicationDto, @GetUser() user: IUser) {
+    await this.loanService.applyLoan(user.id, dto);
   }
 
   @Get()
@@ -34,6 +43,14 @@ export class LoanController {
   @Patch()
   async updateLoan(@Body() dto: LoanDto) {
     await this.loanService.updateLoan(dto);
+  }
+
+  @Patch('application')
+  async updateLoanApplication(
+    @Body() dto: UpdateLoanApplicationDto,
+    @GetUser() user: IUser,
+  ) {
+    await this.loanService.updateLoanApplication(user, dto);
   }
 
   @Delete(':id')

@@ -135,7 +135,12 @@ model LoanApplication {
   fund_manager_id      Int?
   loan_id              Int?
   loan_applied_at      DateTime?
-  status               ApplicationStatus
+  status               ApplicationStatus @default(PENDING)
+  business_name        String
+  company_type         CompanyType
+  is_malaysia_company  Boolean
+  operation_year       Int
+  annual_sales         Float
   approved_at          DateTime?
   rejected_at          DateTime?
   approved_loan_amount Float             @default(0)
