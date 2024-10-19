@@ -7,6 +7,7 @@ import { GlobalModule } from './global.module';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserModule } from './user/user.module';
 import { LoanModule } from './loan/loan.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { LoanModule } from './loan/loan.module';
     GlobalModule,
     UserModule,
     LoanModule,
+    StorageModule,
     // WorkerModule,
   ],
   controllers: [AppController],

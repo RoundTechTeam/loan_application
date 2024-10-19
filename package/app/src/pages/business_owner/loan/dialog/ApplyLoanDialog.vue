@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { GlobalDialog, PrimaryButton } from 'src/components';
-import { useDialog, useLoading } from 'src/composable';
+import { useDialog, useFile, useLoading } from 'src/composable';
 import { useUserStore } from 'src/stores/user';
 import { PropType, ref } from 'vue';
 import { LoanApplicationDto } from '~api/loan/loan.dto';
@@ -14,6 +14,10 @@ const props = defineProps({
 const { dialogRef, emitData } = useDialog();
 const { loading, toast } = useLoading();
 const user = useUserStore();
+const loan_document = useFile({
+  extensions: ['jpg', 'jpeg', 'png'],
+  maxBytes: 1000000,
+});
 
 const state = ref<LoanApplicationDto>({
   id: props.loanApplicationDto.id ?? null,
@@ -22,6 +26,10 @@ const state = ref<LoanApplicationDto>({
 });
 
 function submit() {
+  if (userProfileLogo.file.value) {
+    const [url] = await Api.Storage.upload([userProfileLogo.file.value]);
+  }
+
   toast(
     async () => {
       if (props.loanApplicationDto?.id) {
