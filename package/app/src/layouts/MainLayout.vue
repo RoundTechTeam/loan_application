@@ -82,7 +82,7 @@ async function goto(route: NavigationItem['route'], query?: any) {
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
+        User Panel
         <div>
           <q-btn
             icon="person"
