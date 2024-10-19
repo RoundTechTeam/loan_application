@@ -5,6 +5,6 @@ declare module 'express' {
     token: string;
     tokenCreatedAt: Date;
 
-    User: UserWithoutPassword;
+    user: UserWithoutPassword;
   }
 }

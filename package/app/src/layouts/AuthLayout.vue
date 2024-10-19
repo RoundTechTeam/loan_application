@@ -34,7 +34,7 @@ function buildCarouselContent(): Announcement[] {
         id: 1,
         title: 'Welcome to RoundTech',
         description: 'A Loan application project',
-        imageUrl: null,
+        imageUrl: '/images/general_uses/background-image-1.jpg',
       },
     ];
   }

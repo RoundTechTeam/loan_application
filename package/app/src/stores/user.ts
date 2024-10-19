@@ -23,6 +23,8 @@ export const useUserStore = defineStore('user', {
         this.currentUser = await Api.User.fetchUser();
 
         if (this.currentUser?.id) this.connectionLost = false;
+
+        console.log('this.currentUser', this.currentUser);
       } catch (e) {
         if (e instanceof ApiError && e.statusCode === 401) {
           this.token = null;

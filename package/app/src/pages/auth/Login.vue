@@ -41,7 +41,6 @@ async function login() {
         },
         loginDto.password
       );
-
       if (user.currentUser) {
         router.push({
           name: AppRoute.Dashboard,
@@ -60,7 +59,11 @@ async function login() {
 <template>
   <div class="q-gutter-y-lg">
     <div class="q-gutter-y-sm text-center">
-      <q-img src="/images/logo.png" />
+      <q-img
+        src="/images/general_uses/loan_logo.jpg"
+        width="180px"
+        height="180px"
+      />
       <div class="text-bold" :class="isMobile ? 'text-h4' : 'text-h2'">
         Login
       </div>
