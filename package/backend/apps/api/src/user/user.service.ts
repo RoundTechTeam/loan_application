@@ -123,12 +123,6 @@ export class UserService {
       },
     });
 
-    console.log(
-      'oundUser.verification_code?.toString()',
-      foundUser.verification_code?.toString(),
-    );
-    console.log('verificationCode?.toString()', verificationCode?.toString());
-
     if (
       foundUser.verification_code?.toString() === verificationCode?.toString()
     ) {
