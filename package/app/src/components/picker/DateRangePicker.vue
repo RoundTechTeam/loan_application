@@ -96,6 +96,8 @@ const minutesArray = computed(() => {
     :partial-range="false"
     :preset-dates="preset"
     :max-date="maxDate"
+    :teleport="true"
+    :text-input="true"
   >
     <template v-if="timePicker" #time-picker="{ time, updateTime }">
       <div class="row items-center justify-between q-px-xs">

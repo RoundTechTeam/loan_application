@@ -12,6 +12,8 @@ import { CountryCode } from 'libphonenumber-js';
 import { ECountryCodeP } from './enums';
 export * from './pagination';
 
+export const dateFormat = 'DD/MM/YYYY';
+
 export type IUser = Omit<
   User,
   'password' | 'token' | 'created_at' | 'updated_at'

@@ -11,6 +11,7 @@ export enum AppRoute {
   SignUp = 'SignUp',
 
   Dashboard = 'Dashboard',
+  Loan = 'Loan',
 }
 
 function authGuard(): true | string {
@@ -44,16 +45,21 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/dashboard',
+    path: '',
     component: () => import('src/layouts/MainLayout.vue'),
     meta: {
       guards: [authGuard],
     },
     children: [
       {
-        path: '',
+        path: '/dashboard',
         name: AppRoute.Dashboard,
         component: () => import('pages/dashboard/Index.vue'),
+      },
+      {
+        path: '/loan',
+        name: AppRoute.Loan,
+        component: () => import('pages/loan/Index.vue'),
       },
     ],
   },

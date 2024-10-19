@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { GlobalModule } from './global.module';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserModule } from './user/user.module';
+import { LoanModule } from './loan/loan.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from './user/user.module';
     }),
     GlobalModule,
     UserModule,
+    LoanModule,
     // WorkerModule,
   ],
   controllers: [AppController],
