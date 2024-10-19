@@ -3,6 +3,7 @@ import { Dialog } from 'quasar';
 import { IconButton, PrimaryButton } from 'src/components';
 import { PropType } from 'vue';
 import { Loan } from '~libs/entities';
+import ApplyLoanDialog from './dialog/ApplyLoanDialog.vue';
 import LoanDialog from './dialog/LoanDialog.vue';
 
 const props = defineProps({
@@ -24,6 +25,18 @@ function viewLoan() {
     },
   });
 }
+
+function applyLoan() {
+  Dialog.create({
+    component: ApplyLoanDialog,
+    componentProps: {
+      loanApplicationDto: {
+        id: null,
+        loan_id: props.loan.id,
+      },
+    },
+  });
+}
 </script>
 
 <template>
@@ -42,7 +55,12 @@ function viewLoan() {
           <div class="text-black text-h6 text-bold">
             {{ loan.name }}
           </div>
-          <PrimaryButton label="Apply" />
+          <PrimaryButton
+            label="Apply"
+            @click="applyLoan"
+            color="primary"
+            size="md"
+          />
         </div>
       </div>
     </q-img>

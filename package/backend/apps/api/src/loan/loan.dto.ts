@@ -1,4 +1,4 @@
-import { CompanyType, Loan } from '@prisma/client';
+import { CompanyType, Loan, LoanApplication } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -64,4 +64,20 @@ export class LoanDto implements Omit<Loan, 'created_at' | 'updated_at'> {
   @Type(() => Number)
   @IsNotEmpty()
   interest_rate: number;
+}
+
+export class LoanApplicationDto
+  implements Pick<LoanApplication, 'id' | 'user_id' | 'loan_id'>
+{
+  @IsNumber()
+  @IsOptional()
+  id: number | null;
+
+  @IsNumber()
+  @IsNotEmpty()
+  user_id: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  loan_id: number;
 }
