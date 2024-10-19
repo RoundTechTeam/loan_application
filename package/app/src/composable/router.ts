@@ -6,6 +6,9 @@ export function useRouting() {
   const route = useRoute();
 
   function isRouteActive(appRoute: AppRoute | undefined, exact = false) {
+    if (exact && appRoute) {
+      return route.name === appRoute;
+    }
     if (route.name === appRoute && exact) {
       return true;
     } else if (appRoute) {

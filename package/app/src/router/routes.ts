@@ -14,12 +14,17 @@ export enum AppRoute {
   Verified = 'Verified',
   Logout = 'Logout',
 
-  //General
-  Dashboard = 'Dashboard',
-  Loan = 'Loan',
+  //Admin
+  AdminDashboard = 'AdminDashboard',
+  AdminProfile = 'Profile',
+  AdminLoan = 'AdminLoan',
+  AdminLoanApplication = 'AdminLoanApplication',
 
-  //Profile Settings
-  Profile = 'Profile',
+  //Business Owner
+  UserDashboard = 'UserDashboard',
+  UserLoan = 'UserLoan',
+  UserLoanApplication = 'UserLoanApplication',
+  UserProfile = 'UserProfile',
 }
 
 function authGuard(): true | string {
@@ -35,6 +40,13 @@ function authGuard(): true | string {
   return true;
 }
 
+function adminGuard(): true | string {
+  const user = useUserStore();
+  if (!user.isAdmin) return AppRoute.UserDashboard;
+
+  return true;
+}
+
 function authorizedGuard(): true | string {
   const user = useUserStore();
   console.log('AuthorizedGuard - user.isLoggedIn', user.isLoggedIn);
@@ -47,12 +59,10 @@ function authorizedGuard(): true | string {
     if (!user.isVerified) {
       return AppRoute.Verified;
     }
-    return AppRoute.Dashboard;
+    return AppRoute.UserDashboard;
   } else if (!user.isLoggedIn) {
     return AppRoute.Login;
   }
-
-  // return { route: true };
 
   return true;
 }
@@ -92,26 +102,60 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/admin',
+    component: () => import('src/layouts/AdminLayout.vue'),
+    meta: {
+      guards: [adminGuard],
+    },
+    children: [
+      {
+        path: '/dashboard',
+        name: AppRoute.AdminDashboard,
+        component: () => import('pages/admin/dashboard/Index.vue'),
+      },
+      {
+        path: '/loan',
+        name: AppRoute.AdminLoan,
+        component: () => import('pages/admin/loan/Index.vue'),
+      },
+      {
+        path: '/profile',
+        name: AppRoute.AdminProfile,
+        component: () => import('pages/profile/Index.vue'),
+      },
+      {
+        path: '/loan-application',
+        name: AppRoute.AdminLoanApplication,
+        component: () => import('pages/loan_application/Index.vue'),
+      },
+    ],
+  },
+  {
+    path: '',
+    component: () => import('src/layouts/MainLayout.vue'),
     meta: {
       guards: [authGuard],
     },
     children: [
       {
         path: '/dashboard',
-        name: AppRoute.Dashboard,
-        component: () => import('pages/dashboard/Index.vue'),
-      },
-      {
-        path: '/loan',
-        name: AppRoute.Loan,
-        component: () => import('pages/loan/Index.vue'),
+        name: AppRoute.UserDashboard,
+        component: () => import('pages/business_owner/dashboard/Index.vue'),
       },
       {
         path: '/profile',
-        name: AppRoute.Profile,
+        name: AppRoute.UserProfile,
         component: () => import('pages/profile/Index.vue'),
+      },
+      {
+        path: '/loan',
+        name: AppRoute.UserLoan,
+        component: () => import('pages/business_owner/loan/Index.vue'),
+      },
+      {
+        path: '/loan-application',
+        name: AppRoute.UserLoanApplication,
+        component: () => import('pages/loan_application/Index.vue'),
       },
     ],
   },

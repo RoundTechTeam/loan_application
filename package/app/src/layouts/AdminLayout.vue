@@ -17,17 +17,17 @@ const sidebarItems = computed<NavigationItem[]>(() => {
     {
       title: 'Dashboard',
       icon: 'home',
-      route: AppRoute.UserDashboard,
+      route: AppRoute.AdminDashboard,
     },
     {
       title: 'Loan',
       icon: 'storefront',
-      route: AppRoute.UserLoan,
+      route: AppRoute.AdminLoan,
     },
     {
       title: 'Loan Application',
       icon: 'description',
-      route: AppRoute.UserLoanApplication,
+      route: AppRoute.AdminLoanApplication,
     },
   ];
 });
@@ -36,7 +36,7 @@ const userMenuItems = computed<NavigationItem[]>(() => {
     {
       title: 'Profile',
       icon: 'person',
-      route: AppRoute.UserProfile,
+      route: AppRoute.AdminProfile,
     },
     {
       title: 'Logout',
