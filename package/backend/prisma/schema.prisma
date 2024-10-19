@@ -35,6 +35,12 @@ enum ECountryCodeP {
   SG
 }
 
+enum CompanyType {
+  PRIVATE_LIMITED
+  SOLE_PROPRIETORSHIP
+  PARTNERSHIP
+}
+
 model User {
   id               Int               @id @default(autoincrement())
   full_name        String            @db.VarChar(255)
@@ -70,7 +76,7 @@ model Business {
   incorporation_date  DateTime          @db.Date
   is_verified         Boolean
   address             String            @db.VarChar(255)
-  type                String            @db.VarChar(255)
+  type                CompanyType
   is_malaysia_company Boolean           @default(true)
   created_at          DateTime          @default(now())
   updated_at          DateTime?         @updatedAt
@@ -132,20 +138,20 @@ model LoanApplication {
 }
 
 model Loan {
-  id                     Int       @id @default(autoincrement())
-  name                   String    @db.VarChar(255)
-  start_at               DateTime  @db.Date
-  end_at                 DateTime  @db.Date
-  miminum_loan_amount    Float
+  id                     Int         @id @default(autoincrement())
+  name                   String      @db.VarChar(255)
+  start_at               DateTime    @db.Date
+  end_at                 DateTime    @db.Date
+  mininum_loan_amount    Float
   maximum_loan_amount    Float
   min_operation_year     Int
-  valid_company_type     String    @db.VarChar(255)
+  valid_company_type     CompanyType
   min_annual_sales       Float
-  is_malaysia_company    Boolean   @default(true)
+  is_malaysia_company    Boolean     @default(true)
   instalment_tenure_year Int
   interest_rate          Float
-  created_at             DateTime  @default(now())
-  updated_at             DateTime? @updatedAt
+  created_at             DateTime    @default(now())
+  updated_at             DateTime?   @updatedAt
 
   @@map("loans")
 }
