@@ -30,6 +30,11 @@ export class LoanController {
     await this.loanService.applyLoan(user.id, dto);
   }
 
+  @Post('aiScan')
+  async aiScan(@Body() dto: string, @GetUser() user: IUser) {
+    await this.loanService.aiScan(dto, user.id);
+  }
+
   @Get()
   async getLoans() {
     return await this.loanService.getLoans();

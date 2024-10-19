@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import fs from 'fs/promises';
+import OpenAI from 'openai';
+import pdfPoppler from 'pdf-poppler';
+import Tesseract, { RecognizeResult } from 'tesseract.js';
 import { db } from '~api/db';
 import { IUser, LoanApplicationDetail } from '~libs/entities';
+import { ApplicationStatus } from '~libs/entities/enums';
 import {
   LoanApplicationDto,
   LoanDto,
   UpdateLoanApplicationDto,
 } from './loan.dto';
-import { ApplicationStatus } from '~libs/entities/enums';
 
 @Injectable()
 export class LoanService {
@@ -59,6 +63,119 @@ export class LoanService {
         },
       },
     });
+  }
+
+  async sendToChatGpt(text: string) {
+    const openai = new OpenAI({
+      defaultHeaders: {
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+    });
+
+    const importantInfo = [
+      'Company Name',
+      'Company Incorporation Date',
+      'Company Type',
+      'Retain Earning',
+      'Revenue',
+    ];
+
+    const content = `
+                     You are an AI assistant that help to find the important information from the ${text}.
+  
+                     ##Important
+                     I have few important information that I need to get from the ${text}.
+                     ${importantInfo.map((info) => `1. ${info}`).join('\n')}
+  
+                     ##Response
+                     Please provide me the important information from the ${text}.
+  
+                     ##Result
+                     Here is the result:
+                      'Company Name': '',
+                      'Company Incorporation Date': '',
+                      'Company Type': '',
+                      'Retain Earning': '',
+                      'Revenue': '',
+                    `;
+
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: content }],
+      stream: true,
+    });
+    for await (const chunk of stream) {
+      process.stdout.write(chunk.choices[0]?.delta?.content || '');
+    }
+
+    return stream;
+  }
+
+  async aiScan(filePath: string, user_id: number) {
+    const user = await db.user.findFirst({
+      where: {
+        id: user_id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) throw new BadRequestException('User not found');
+
+    const images = [];
+
+    const outDirectory = path.resolve(
+      __dirname,
+      `../../../../backend/apps/api/src/ai-generator/image/generator-image`,
+    );
+
+    if (filePath.endsWith('.pdf')) {
+      const newFileName = path.basename(filePath, path.extname(filePath));
+
+      const opts = {
+        format: 'png',
+        out_dir: outDirectory,
+        out_prefix: newFileName,
+        page: null,
+      };
+
+      await pdfPoppler.convert(filePath, opts).then(async () => {
+        for (let i = 0; i < 15; i++) {
+          const fileName = path.resolve(
+            __dirname,
+            `../../../../backend/apps/api/src/ai-generator/image/generator-image/${newFileName}-${
+              i + 1
+            }.png`,
+          );
+
+          await fs
+            .access(fileName, fs.constants.F_OK)
+            .then(() => {
+              images.push(fileName);
+            })
+            .catch(() => {
+              console.log('file not found');
+            });
+        }
+      });
+    } else {
+      images.push(filePath);
+    }
+
+    const textToSubmit = [];
+
+    for (const image of images) {
+      await Tesseract.recognize(
+        image,
+        'eng', // Use English language
+      ).then(async (result: RecognizeResult) => {
+        console.log(result.data.text);
+        textToSubmit.push(result.data.text);
+      });
+    }
+
+    await this.sendToChatGpt(textToSubmit.join(','));
   }
 
   async getLoans() {

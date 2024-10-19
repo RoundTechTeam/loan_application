@@ -16,6 +16,13 @@ export default {
   async getLoans() {
     return getData<Loan[]>(await Api.client('/loan').get(''));
   },
+
+  async generateAiMatchingColumn(dto: string): Promise<LoanApplicationDto> {
+    return getData<LoanApplicationDto>(
+      await Api.client('/loan').post('/aiScan', dto)
+    );
+  },
+
   async getLoanApplications() {
     return getData<LoanApplicationDetail[]>(
       await Api.client('/loan').get('/applications')
