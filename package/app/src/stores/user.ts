@@ -9,20 +9,25 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     token: useLocalStorage<string | null>('access-token', null),
     currentUser: ref<UserWithoutPassword | null>(null),
-    connectionLost: ref(false),
+    isVerified: useLocalStorage<boolean>('isVerified', false),
+    isAdmin: useLocalStorage<boolean>('isAdmin', false),
   }),
   getters: {
     isLoggedIn: (state) => !!state.token,
-    isAdmin: (state) => state.currentUser?.is_admin ?? false,
   },
   actions: {
     async refetch(): Promise<void> {
       if (!this.token) return;
       useAppStore().addLoadingQueues([{ id: 'user', isGlobal: true }]);
       try {
-        this.currentUser = await Api.User.fetchUser();
+        const fetchUser = await Api.User.fetchUser();
 
-        if (this.currentUser?.id) this.connectionLost = false;
+        if (fetchUser?.id) {
+          this.currentUser = fetchUser;
+          this.isVerified = fetchUser.is_verified;
+          this.isAdmin = fetchUser.is_admin;
+          this.connectionLost = false;
+        }
       } catch (e) {
         if (e instanceof ApiError && e.statusCode === 401) {
           this.token = null;

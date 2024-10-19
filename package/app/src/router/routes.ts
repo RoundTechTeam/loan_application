@@ -1,3 +1,4 @@
+import { useUserStore } from 'src/stores/user';
 import { RouteRecordRaw } from 'vue-router';
 
 declare module 'vue-router' {
@@ -7,18 +8,54 @@ declare module 'vue-router' {
 }
 
 export enum AppRoute {
+  //Login
   Login = 'Login',
-  SignUp = 'SignUp',
+  Register = 'Register',
+  Verified = 'Verified',
+  Logout = 'Logout',
 
-  Dashboard = 'Dashboard',
+  //Admin
+  AdminDashboard = 'AdminDashboard',
+  AdminProfile = 'Profile',
+  AdminLoan = 'AdminLoan',
+  AdminLoanApplication = 'AdminLoanApplication',
+
+  //Business Owner
+  UserDashboard = 'UserDashboard',
+  UserLoan = 'UserLoan',
+  UserLoanApplication = 'UserLoanApplication',
+  UserProfile = 'UserProfile',
 }
 
 function authGuard(): true | string {
-  // if not loged in, return AppRoute.Login
+  const user = useUserStore();
+  if (!user.isLoggedIn) return AppRoute.Login;
+  if (!user.isVerified) return AppRoute.Verified;
+
   return true;
 }
 
-function loginGuard(): true | string {
+function adminGuard(): true | string {
+  const user = useUserStore();
+  if (!user.isLoggedIn) return AppRoute.Login;
+  if (!user.isAdmin) return AppRoute.UserDashboard;
+
+  return true;
+}
+
+function authorizedGuard(): true | string {
+  const user = useUserStore();
+
+  if (user.isLoggedIn) {
+    if (user.isAdmin) return AppRoute.AdminDashboard;
+    if (!user.isVerified) {
+      return AppRoute.Verified;
+    }
+    return AppRoute.UserDashboard;
+  } else if (!user.isLoggedIn) {
+    return AppRoute.Login;
+  }
+
   return true;
 }
 
@@ -31,51 +68,109 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/auth',
-    component: () => import('src/layouts/AuthLayout.vue'),
-    meta: {
-      guards: [loginGuard],
-    },
+    component: () => import('layouts/AuthLayout.vue'),
     children: [
       {
         path: 'login',
         name: AppRoute.Login,
-        component: () => import('src/pages/auth/Login.vue'),
+        meta: {
+          guards: [authorizedGuard],
+        },
+        component: () => import('pages/auth/Login.vue'),
+      },
+      // {
+      //   path: 'forget-password',
+      //   name: AppRoute.ForgetPassword,
+      //   meta: {
+      //     guards: [authorizedGuard],
+      //   },
+      //   component: () => import('pages/auth/ForgetPassword.vue'),
+      // },
+      // {
+      //   path: 'reset-password',
+      //   name: AppRoute.ResetPassword,
+      //   component: () => import('pages/auth/ResetPassword.vue'),
+      // },
+    ],
+  },
+  {
+    path: '/admin',
+    component: () => import('src/layouts/AdminLayout.vue'),
+    meta: {
+      guards: [adminGuard],
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: AppRoute.AdminDashboard,
+        component: () => import('pages/admin/dashboard/Index.vue'),
+      },
+      {
+        path: 'loan',
+        name: AppRoute.AdminLoan,
+        component: () => import('pages/admin/loan/Index.vue'),
+      },
+      {
+        path: 'profile',
+        name: AppRoute.AdminProfile,
+        component: () => import('pages/profile/Index.vue'),
+      },
+      {
+        path: 'loan-application',
+        name: AppRoute.AdminLoanApplication,
+        component: () => import('pages/loan_application/Index.vue'),
       },
     ],
   },
   {
-    path: '/dashboard',
+    path: '',
     component: () => import('src/layouts/MainLayout.vue'),
     meta: {
       guards: [authGuard],
     },
     children: [
       {
-        path: '',
-        name: AppRoute.Dashboard,
-        component: () => import('pages/dashboard/Index.vue'),
+        path: 'dashboard',
+        name: AppRoute.UserDashboard,
+        component: () => import('pages/business_owner/dashboard/Index.vue'),
+      },
+      {
+        path: 'profile',
+        name: AppRoute.UserProfile,
+        component: () => import('pages/profile/Index.vue'),
+      },
+      {
+        path: 'loan',
+        name: AppRoute.UserLoan,
+        component: () => import('pages/business_owner/loan/Index.vue'),
+      },
+      {
+        path: 'loan-application',
+        name: AppRoute.UserLoanApplication,
+        component: () => import('pages/loan_application/Index.vue'),
       },
     ],
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
+  {
+    path: '/register',
+    name: AppRoute.Register,
+    meta: {
+      guards: [],
+    },
+    component: () => import('pages/auth/Register.vue'),
+  },
+  {
+    path: '/verified',
+    name: AppRoute.Verified,
+    meta: {
+      guards: [authorizedGuard],
+    },
+    component: () => import('pages/auth/Verfied.vue'),
+  },
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
-
-function validateRoutes(routes: RouteRecordRaw[]): void {
-  for (const route of routes) {
-    if (route.component instanceof Promise) {
-      throw new Error(
-        `Route component must be a Component or a function that returns a Component. Route: ${route.path}`
-      );
-    }
-    if (route.children?.length) validateRoutes(route.children);
-  }
-}
-validateRoutes(routes);
 
 export default routes;

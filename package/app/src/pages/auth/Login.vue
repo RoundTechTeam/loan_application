@@ -17,6 +17,7 @@ const user = useUserStore();
 const app = useAppStore();
 const router = useRouter();
 
+const hover = ref(false);
 const loginDto = reactive<{
   phone: PhoneDetails;
   password: string;
@@ -41,11 +42,15 @@ async function login() {
         },
         loginDto.password
       );
-
       if (user.currentUser) {
-        router.push({
-          name: AppRoute.Dashboard,
-        });
+        if (user.isAdmin)
+          router.push({
+            name: AppRoute.AdminDashboard,
+          });
+        else
+          router.push({
+            name: AppRoute.UserDashboard,
+          });
       }
     },
     {
@@ -55,12 +60,22 @@ async function login() {
     }
   );
 }
+
+function signUp() {
+  router.push({
+    name: AppRoute.Register,
+  });
+}
 </script>
 
 <template>
   <div class="q-gutter-y-lg">
     <div class="q-gutter-y-sm text-center">
-      <q-img src="/images/logo.png" />
+      <q-img
+        src="/images/general_uses/loan_logo.jpg"
+        width="180px"
+        height="180px"
+      />
       <div class="text-bold" :class="isMobile ? 'text-h4' : 'text-h2'">
         Login
       </div>
@@ -113,6 +128,21 @@ async function login() {
     <div class="column q-gutter-y-sm">
       <div class="text-center text-subtitle1"></div>
       <q-separator />
+
+      <div class="column">
+        <div class="text-center text-subtitle1">
+          <p @click="signUp">
+            Sign up for a
+            <span
+              @mouseover="hover = true"
+              @mouseleave="hover = false"
+              :class="hover ? 'text-blue-6' : 'text-primary'"
+              class="text-weight-bold cursor-pointer"
+              >Demo Account</span
+            >
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>

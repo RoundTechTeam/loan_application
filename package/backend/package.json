@@ -22,7 +22,10 @@
     "prisma:studio:prod": "dotenv -e .env.prod prisma studio",
     "prisma:push:dev": "dotenv -e .env.dev prisma db push",
     "prisma:push:prod": "dotenv -e .env.prod prisma db push",
-    "console:dev": "cross-env NODE_ENV=dev ts-node --files --project apps/cli/tsconfig.app.json -r tsconfig-paths/register apps/cli/src/main.ts",
+    "pub:docker:dev": "pnpm build && docker build . -f ./cicd/api.Dockerfile -t netsealtech/loan-dev-api:0.0.1 && docker push netsealtech/loan-dev-api:0.0.1",
+    "pub:docker:prod": "pnpm build && docker build . -f ./cicd/api.Dockerfile -t netsealtech/loan-prod-api-prod:1.9.8 && docker push netsealtech/loan-prod-api-prod:1.9.8",
+    "deploy:api:dev": "npx caprover deploy --appToken b04e9648af378bd7a4261a890bc4f09b3e1b0de122e21209292743dad3013692 --caproverUrl https://captain.dreamztrack.com.my --imageName docker.io/netsealtech/loan-dev-api:0.0.1 --appName loan-api-dev",
+    "deploy:api:prod": "npx caprover deploy --appToken token_here --caproverUrl https://captain.dreamztrack.com.my --imageName docker.io/netsealtech/loan-api-prod:1.9.8 --appName loan-api-prod",
     "console:prod": "cross-env NODE_ENV=prod ts-node --files --project apps/cli/tsconfig.app.json -r tsconfig-paths/register apps/cli/src/main.ts"
   },
   "dependencies": {
@@ -59,6 +62,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "short-unique-id": "^4.4.4",
+    "twilio": "^4.23.0",
     "superjson": "^1.13.3",
     "tesseract.js": "^5.1.1",
     "zod": "^3.22.2"

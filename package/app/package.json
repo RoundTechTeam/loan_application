@@ -1,8 +1,8 @@
 {
-  "name": "vue-quasar-typescript-starter",
+  "name": "Loan App Demo",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "vue-quasar-typescript-starter",
+  "description": "A demo Loan App Demo",
+  "productName": "Loan App Demo",
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useSlots, PropType, computed } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
-import FlatButton from '../buttons/FlatButton.vue';
 import { useForm, useResponsive } from 'src/composable';
+import { PropType, computed, useSlots } from 'vue';
+import FlatButton from '../buttons/FlatButton.vue';
 
 type Position = 'standard' | 'top' | 'right' | 'bottom' | 'left' | undefined;
 

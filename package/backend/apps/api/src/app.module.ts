@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { GlobalModule } from './global.module';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserModule } from './user/user.module';
-import { AiGeneratorModule } from './ai-generator/ai-generator.module';
+import { LoanModule } from './loan/loan.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { AiGeneratorModule } from './ai-generator/ai-generator.module';
     }),
     GlobalModule,
     UserModule,
-    AiGeneratorModule,
+    LoanModule,
     // WorkerModule,
   ],
   controllers: [AppController],

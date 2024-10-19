@@ -13,3 +13,19 @@ export const ECountryCodeP = {
 } as const;
 
 export type ECountryCodeP = (typeof ECountryCodeP)[keyof typeof ECountryCodeP];
+
+export const CompanyType = {
+  PRIVATE_LIMITED: "PRIVATE_LIMITED",
+  SOLE_PROPRIETORSHIP: "SOLE_PROPRIETORSHIP",
+  PARTNERSHIP: "PARTNERSHIP",
+} as const;
+
+export type CompanyType = (typeof CompanyType)[keyof typeof CompanyType];
+
+export const ApplicationStatus = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+} as const;
+
+export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus];

@@ -35,19 +35,33 @@ enum ECountryCodeP {
   SG
 }
 
+enum CompanyType {
+  PRIVATE_LIMITED
+  SOLE_PROPRIETORSHIP
+  PARTNERSHIP
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id               Int               @id @default(autoincrement())
-  full_name        String            @db.VarChar(255)
-  password         String            @db.Text
-  contact_no       String            @db.VarChar(255)
-  country_code     ECountryCodeP     @default(MY)
-  is_admin         Boolean           @default(false)
-  is_delete        Boolean           @default(false)
-  created_at       DateTime          @default(now())
-  updated_at       DateTime?         @updatedAt
-  Sessions         UserSession[]
-  LoanApplications LoanApplication[]
-  FundManager      FundManager?
+  id                Int               @id @default(autoincrement())
+  full_name         String            @db.VarChar(255)
+  password          String            @db.Text
+  contact_no        String            @db.VarChar(255)
+  country_code      ECountryCodeP     @default(MY)
+  is_admin          Boolean           @default(false)
+  is_delete         Boolean           @default(false)
+  is_verified       Boolean           @default(false)
+  verification_code Int               @default(168888)
+  created_at        DateTime          @default(now())
+  updated_at        DateTime?         @updatedAt
+  Sessions          UserSession[]
+  LoanApplications  LoanApplication[]
+  FundManager       FundManager?
 
   @@map("users")
 }
@@ -58,7 +72,7 @@ model UserSession {
   user_id    Int
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
-  User       User      @relation(fields: [user_id], references: [id])
+  User       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([token])
   @@map("user_sessions")
@@ -67,10 +81,10 @@ model UserSession {
 model Business {
   id                  Int               @id @default(autoincrement())
   name                String            @db.VarChar(255)
-  incorporation_date  DateTime          @db.Date
+  incorporation_date  DateTime
   is_verified         Boolean
   address             String            @db.VarChar(255)
-  type                String            @db.VarChar(255)
+  type                CompanyType
   is_malaysia_company Boolean           @default(true)
   created_at          DateTime          @default(now())
   updated_at          DateTime?         @updatedAt
@@ -116,36 +130,40 @@ model FundManager {
 }
 
 model LoanApplication {
-  id                   Int          @id @default(autoincrement())
+  id                   Int               @id @default(autoincrement())
   user_id              Int
   fund_manager_id      Int?
+  loan_id              Int?
   loan_applied_at      DateTime?
+  status               ApplicationStatus
   approved_at          DateTime?
   rejected_at          DateTime?
-  approved_loan_amount Float        @default(0)
-  applied_by           User?        @relation(fields: [user_id], references: [id])
-  processed_by         FundManager? @relation(fields: [fund_manager_id], references: [id])
-  created_at           DateTime     @default(now())
-  updated_at           DateTime?    @updatedAt
+  approved_loan_amount Float             @default(0)
+  created_at           DateTime          @default(now())
+  updated_at           DateTime?         @updatedAt
+  applied_by           User?             @relation(fields: [user_id], references: [id])
+  processed_by         FundManager?      @relation(fields: [fund_manager_id], references: [id])
+  Loan                 Loan?             @relation(fields: [loan_id], references: [id])
 
   @@map("loan_applications")
 }
 
 model Loan {
-  id                     Int       @id @default(autoincrement())
-  name                   String    @db.VarChar(255)
-  start_at               DateTime  @db.Date
-  end_at                 DateTime  @db.Date
-  miminum_loan_amount    Float
+  id                     Int               @id @default(autoincrement())
+  name                   String            @db.VarChar(255)
+  start_at               DateTime
+  end_at                 DateTime
+  mininum_loan_amount    Float
   maximum_loan_amount    Float
   min_operation_year     Int
-  valid_company_type     String    @db.VarChar(255)
+  valid_company_type     CompanyType
   min_annual_sales       Float
-  is_malaysia_company    Boolean   @default(true)
+  is_malaysia_company    Boolean           @default(true)
   instalment_tenure_year Int
   interest_rate          Float
-  created_at             DateTime  @default(now())
-  updated_at             DateTime? @updatedAt
+  created_at             DateTime          @default(now())
+  updated_at             DateTime?         @updatedAt
+  LoanApplications       LoanApplication[]
 
   @@map("loans")
 }
