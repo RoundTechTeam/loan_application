@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { AiGeneratorModule } from './ai-generator/ai-generator.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GlobalModule } from './global.module';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { UserModule } from './user/user.module';
 import { LoanModule } from './loan/loan.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LoanModule } from './loan/loan.module';
     UserModule,
     LoanModule,
     // WorkerModule,
+    AiGeneratorModule,
   ],
   controllers: [AppController],
   providers: [

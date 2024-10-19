@@ -5,7 +5,6 @@ import { PropType } from 'vue';
 import { Loan } from '~libs/entities';
 import ApplyLoanDialog from './dialog/ApplyLoanDialog.vue';
 import LoanDialog from './dialog/LoanDialog.vue';
-import ApplyLoanDialog from './dialog/ApplyLoanDialog.vue';
 
 const props = defineProps({
   loan: {

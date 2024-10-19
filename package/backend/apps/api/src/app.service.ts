@@ -5,7 +5,7 @@ import { AiGeneratorService } from './ai-generator/ai-generator.service';
 export class AppService implements OnModuleInit {
   constructor(private readonly aiGeneratorService: AiGeneratorService) {}
   async onModuleInit() {
-    await this.aiGeneratorService.getTextFromImage();
+    // await this.aiGeneratorService.getTextFromImage();
   }
 
   getHello(): string {
