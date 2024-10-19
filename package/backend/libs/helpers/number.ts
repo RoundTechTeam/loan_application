@@ -1,10 +1,10 @@
-import { ECountryCodeP } from '@prisma/client';
 import {
   CountryCode,
   getCountryCallingCode,
   isValidPhoneNumber,
   parsePhoneNumber,
 } from 'libphonenumber-js';
+import { ECountryCodeP } from '~libs/entities/enums';
 
 export const malysiaNumberPrefixes = [
   '60',

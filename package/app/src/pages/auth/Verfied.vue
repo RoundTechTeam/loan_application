@@ -3,23 +3,15 @@ import { Api } from 'src/api';
 import TextInput from 'src/components/form/TextInput.vue';
 import { useLoading, useResponsive } from 'src/composable';
 import { AppRoute } from 'src/router/routes';
-import { useAppStore } from 'src/stores/app';
 import { useUserStore } from 'src/stores/user';
 import { onMounted, reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { buildPhoneNumber } from '~libs/helpers';
 
-interface Feature {
-  title: string;
-  icon: string;
-}
-
 const { lte, isMobile } = useResponsive();
-const { toast, run } = useLoading();
+const { toast } = useLoading();
 const user = useUserStore();
-const app = useAppStore();
 const router = useRouter();
-const route = useRoute();
 
 const state = reactive<{ verificationCode: number | null }>({
   verificationCode: null,
