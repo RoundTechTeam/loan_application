@@ -41,6 +41,12 @@ enum CompanyType {
   PARTNERSHIP
 }
 
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id               Int               @id @default(autoincrement())
   full_name        String            @db.VarChar(255)
@@ -123,36 +129,40 @@ model FundManager {
 }
 
 model LoanApplication {
-  id                   Int          @id @default(autoincrement())
+  id                   Int               @id @default(autoincrement())
   user_id              Int
   fund_manager_id      Int?
+  loan_id              Int?
   loan_applied_at      DateTime?
+  status               ApplicationStatus
   approved_at          DateTime?
   rejected_at          DateTime?
-  approved_loan_amount Float        @default(0)
-  applied_by           User?        @relation(fields: [user_id], references: [id])
-  processed_by         FundManager? @relation(fields: [fund_manager_id], references: [id])
-  created_at           DateTime     @default(now())
-  updated_at           DateTime?    @updatedAt
+  approved_loan_amount Float             @default(0)
+  created_at           DateTime          @default(now())
+  updated_at           DateTime?         @updatedAt
+  applied_by           User?             @relation(fields: [user_id], references: [id])
+  processed_by         FundManager?      @relation(fields: [fund_manager_id], references: [id])
+  Loan                 Loan?             @relation(fields: [loan_id], references: [id])
 
   @@map("loan_applications")
 }
 
 model Loan {
-  id                     Int         @id @default(autoincrement())
-  name                   String      @db.VarChar(255)
-  start_at               DateTime    @db.Date
-  end_at                 DateTime    @db.Date
+  id                     Int               @id @default(autoincrement())
+  name                   String            @db.VarChar(255)
+  start_at               DateTime          @db.Date
+  end_at                 DateTime          @db.Date
   mininum_loan_amount    Float
   maximum_loan_amount    Float
   min_operation_year     Int
   valid_company_type     CompanyType
   min_annual_sales       Float
-  is_malaysia_company    Boolean     @default(true)
+  is_malaysia_company    Boolean           @default(true)
   instalment_tenure_year Int
   interest_rate          Float
-  created_at             DateTime    @default(now())
-  updated_at             DateTime?   @updatedAt
+  created_at             DateTime          @default(now())
+  updated_at             DateTime?         @updatedAt
+  LoanApplications       LoanApplication[]
 
   @@map("loans")
 }
