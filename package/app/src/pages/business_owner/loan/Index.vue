@@ -26,8 +26,12 @@ onMounted(() => fetchLoans());
 <template>
   <q-page padding class="q-gutter-y-md">
     <div class="row items-center">
-      <div class="col-md-3 col-sm-4 col-12">
-        <LoanCard v-for="(loan, i) in data" :key="i" :loan="loan" />
+      <div
+        v-for="(loan, i) in data"
+        :key="i"
+        class="col-lg-2 col-md-3 col-sm-4 col-6 q-pa-sm"
+      >
+        <LoanCard :loan="loan" :index="i" />
       </div>
     </div>
   </q-page>

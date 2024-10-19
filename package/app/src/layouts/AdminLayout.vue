@@ -119,7 +119,7 @@ async function goto(route: NavigationItem['route'], query?: any) {
           <q-list class="relative-position" style="padding-bottom: 150px">
             <q-item header class="items-center q-gutter-x-sm justify-center">
               <img
-                src="images/general_uses/loan_logo.jpg"
+                src="/images/general_uses/loan_logo.jpg"
                 style="width: 130px; max-height: 130px"
               />
             </q-item>
