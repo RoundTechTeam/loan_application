@@ -1,7 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { db } from '~api/db';
 import { IUser, LoanApplicationDetail } from '~libs/entities';
-import { LoanDto } from './loan.dto';
+import {
+  LoanApplicationDto,
+  LoanDto,
+  UpdateLoanApplicationDto,
+} from './loan.dto';
+import { ApplicationStatus } from '~libs/entities/enums';
 
 @Injectable()
 export class LoanService {
@@ -16,12 +21,6 @@ export class LoanService {
     });
     if (existedLoan) throw new BadRequestException('Loan already exists');
 
-    console.log('dto', dto.start_at);
-    console.log('dto', dto.end_at);
-
-    console.log('dto', new Date(dto.start_at));
-    console.log('dto', new Date(dto.end_at));
-
     await db.loan.create({
       data: {
         name: dto.name,
@@ -35,6 +34,29 @@ export class LoanService {
         is_malaysia_company: dto.is_malaysia_company,
         instalment_tenure_year: dto.instalment_tenure_year,
         interest_rate: dto.interest_rate,
+      },
+    });
+  }
+
+  async applyLoan(userId: number, dto: LoanApplicationDto) {
+    await db.loanApplication.create({
+      data: {
+        business_name: dto.business_name,
+        company_type: dto.company_type,
+        is_malaysia_company: dto.is_malaysia_company,
+        annual_sales: dto.annual_sales,
+        operation_year: dto.operation_year,
+        loan_applied_at: new Date(),
+        applied_by: {
+          connect: {
+            id: userId,
+          },
+        },
+        Loan: {
+          connect: {
+            id: dto.loan_id,
+          },
+        },
       },
     });
   }
@@ -60,8 +82,13 @@ export class LoanService {
           select: {
             id: true,
             name: true,
+            maximum_loan_amount: true,
+            mininum_loan_amount: true,
           },
         },
+      },
+      orderBy: {
+        created_at: 'desc',
       },
     });
   }
@@ -93,6 +120,54 @@ export class LoanService {
         is_malaysia_company: dto.is_malaysia_company,
         instalment_tenure_year: dto.instalment_tenure_year,
         interest_rate: dto.interest_rate,
+      },
+    });
+  }
+
+  async updateLoanApplication(user: IUser, dto: UpdateLoanApplicationDto) {
+    const fundManager = await db.fundManager.findFirst({
+      where: {
+        user_id: user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (!fundManager)
+      throw new BadRequestException(
+        'You have no permission to approve/reject loan application',
+      );
+
+    const application = await db.loanApplication.findFirst({
+      where: {
+        id: dto.id,
+      },
+      select: {
+        id: true,
+        status: true,
+      },
+    });
+    if (!application) throw new BadRequestException('Application not found');
+
+    if (application.status !== ApplicationStatus.PENDING)
+      throw new BadRequestException('Application is not pending');
+
+    await db.loanApplication.update({
+      where: {
+        id: dto.id,
+      },
+      data: {
+        approved_loan_amount: dto.approved_loan_amount,
+        status: dto.status,
+        approved_at:
+          dto.status === ApplicationStatus.APPROVED ? new Date() : null,
+        rejected_at:
+          dto.status === ApplicationStatus.REJECTED ? new Date() : null,
+        processed_by: {
+          connect: {
+            id: fundManager.id,
+          },
+        },
       },
     });
   }

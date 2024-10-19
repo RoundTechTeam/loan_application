@@ -30,10 +30,7 @@ function applyLoan() {
   Dialog.create({
     component: ApplyLoanDialog,
     componentProps: {
-      loanApplicationDto: {
-        id: null,
-        loan_id: props.loan.id,
-      },
+      loan: props.loan,
     },
   });
 }
@@ -55,12 +52,7 @@ function applyLoan() {
           <div class="text-black text-h6 text-bold">
             {{ loan.name }}
           </div>
-          <PrimaryButton
-            label="Apply"
-            @click="applyLoan"
-            color="primary"
-            size="md"
-          />
+          <PrimaryButton label="Apply" @click="applyLoan" />
         </div>
       </div>
     </q-img>
