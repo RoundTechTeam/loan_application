@@ -8,8 +8,8 @@ import {
   PrimaryButton,
   TextInput,
 } from 'src/components';
-import { useDialog, useLoading } from 'src/composable';
-import { prompt } from 'src/plugins';
+import { useDialog, useFile, useLoading } from 'src/composable';
+import { notify, prompt } from 'src/plugins';
 import { PropType, ref } from 'vue';
 import { LoanApplicationDto } from '~api/loan/loan.dto';
 import { Loan } from '~libs/entities';
@@ -24,6 +24,10 @@ const props = defineProps({
 
 const { dialogRef, emitData } = useDialog();
 const { loading, toast } = useLoading();
+const company_document_file = useFile({
+  extensions: ['jpg', 'jpeg', 'png'],
+  maxBytes: 1000000,
+});
 
 const state = ref<LoanApplicationDto>({
   is_malaysia_company: true,
@@ -34,7 +38,15 @@ const state = ref<LoanApplicationDto>({
   business_name: '',
 });
 
-function submit() {
+async function submit() {
+  if (!company_document_file.file.value)
+    return notify.error('No file selected');
+
+  if (company_document_file.file.value) {
+    const [url] = await Api.Store.upload([company_document_file.file.value]);
+    console.log('url', url);
+  }
+
   prompt
     .warningConfirmation({
       message: 'Are you sure you want to apply for this loan?',
@@ -64,6 +76,24 @@ function submit() {
     @submit="submit"
   >
     <div class="q-gutter-y-md">
+      <AppForm title="Upload Document" required>
+        <q-file
+          outlined
+          use-chips
+          :accept="company_document_file.accept.value"
+          :hint="company_document_file.hint.value"
+          :max-file-size="company_document_file.maxFileSize"
+          :error="!!company_document_file.error.value"
+          dense
+          :error-message="company_document_file.error.value || undefined"
+          @rejected="company_document_file.handleError"
+          v-model="company_document_file.file.value"
+        >
+          <template v-slot:prepend>
+            <q-icon name="attach_file" @click.stop.prevent />
+          </template>
+        </q-file>
+      </AppForm>
       <AppForm title="Loan Name">
         <div>{{ loan.name }}</div>
       </AppForm>

@@ -41,7 +41,7 @@ const statusOptions = Object.keys(ApplicationStatus).reduce<
   return [...pv, { label: capitalCase(cv), value: cv as ApplicationStatus }];
 }, []);
 
-function submit() {
+async function submit() {
   prompt
     .warningConfirmation({
       title: 'Confirm',
