@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "module": "esnext",
+    "strict": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "target": "esnext",
+    "baseUrl": ".",
+    "incremental": true,
+    "skipLibCheck": true,
+    "paths": {
+      "src/*": [
+        "src/*"
+      ],
+      "components/*": [
+        "src/components/*"
+      ],
+      "layouts/*": [
+        "src/layouts/*"
+      ],
+      "pages/*": [
+        "src/pages/*"
+      ],
+    "~libs/*": [
+      "../backend/libs/*"
+    ],
+      "~api/*": [
+        "../backend/apps/api/src/*"
+      ],
+    },
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue", "src/pages/settings/IntegrationAPI/facebook.integration.ts",
+  ],
+  "exclude": [
+    "/dist",
+    "node_modules"
+  ],
+}

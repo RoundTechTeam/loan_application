@@ -1,0 +1,57 @@
+{
+  "name": "vue-quasar-typescript-starter",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "productName": "vue-quasar-typescript-starter",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore ./",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "serve:dev": "pnpm i && vite",
+    "serve:prod": "pnpm i && vite --mode production",
+    "emulator": "npx servor dist/spa index.html 9000 --reload --browse",
+    "build:dev": "vite build --mode development",
+    "build:prod": "vite build --mode production"
+  },
+  "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@quasar/extras": "^1.16.9",
+    "@vuepic/vue-datepicker": "^8.2.0",
+    "@vueuse/core": "^9.13.0",
+    "axios": "^1.6.2",
+    "change-case": "^4.1.2",
+    "dayjs": "^1.11.10",
+    "libphonenumber-js": "^1.10.52",
+    "pinia": "^2.1.7",
+    "quasar": "^2.14.2",
+    "vue": "^3.3.13",
+    "vue-router": "^4.2.5",
+    "vue-sonner": "^1.1.2",
+    "vue-country-flag-next": "^2.3.2"
+  },
+  "devDependencies": {
+    "@quasar/vite-plugin": "^1.6.0",
+    "@rushstack/eslint-patch": "^1.6.1",
+    "@types/node": "^18.19.3",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-vue": "^4.5.2",
+    "@vue/eslint-config-typescript": "^11.0.3",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.19.2",
+    "path": "^0.12.7",
+    "prettier": "^2.8.8",
+    "sass": "1.33.0",
+    "typescript": "^4.9.5",
+    "vite": "^4.5.1",
+    "vite-plugin-ejs": "^1.7.0",
+    "vite-plugin-top-level-await": "^1.4.1"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

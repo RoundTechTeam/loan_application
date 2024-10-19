@@ -1,0 +1,176 @@
+@import "./border.sass"
+@import "./color.sass"
+@import "./typo.sass"
+@import "quasar/src/css/index.sass"
+
+body
+  color: $text-primary
+
+a
+  text-decoration: none
+  color: inherit
+
+  &.router-link-exact-active
+    @extend .text-fprimary-3
+
+.app-shadow
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.10) !important
+
+.app-container
+  @extend .q-pa-lg
+  &-x
+    @extend .q-px-lg, .q-py-none
+  &-xt
+    @extend .q-px-lg, .q-pt-lg
+
+.input-wrapper
+  padding: 6px 12px
+  min-height: 40px
+  @extend .bordered, .br-sm
+
+.input-hide-error.q-field--error
+  .q-field__bottom
+    display: none
+
+.main-form
+  .form-title
+    @extend .t-title
+
+.secondary-form
+  .form-title
+    @extend .t-body-bold
+
+.form-wrapper
+  padding: 16px
+  @extend .br-md, .bordered
+
+  .form-title
+    @extend .t-title
+
+  &.sub-form
+    .form-title
+      @extend .t-body-bold
+
+.form-error-message
+  font-size: 11px
+
+.q-dialog__inner > div
+  max-width: none !important
+
+.dialog-container
+  @extend .q-pa-lg
+
+.dialog-actions
+  @extend .q-pt-none, .q-px-lg, .q-pb-lg, .row, .q-gutter-x-md, .justify-end
+
+.q-stepper__step-inner
+  padding: 0 !important
+
+.q-stepper__nav
+  padding: 0 !important
+
+.q-field__control:before
+  border-color: $utility-divider !important
+
+// q-table
+.q-table
+  background: transparent !important
+  th, td
+    @extend .t-body
+
+  .q-td
+    .cell-padding
+      padding: 5px 0
+
+.q-table__top,
+thead tr:first-child th
+  background-color: $neutral-100
+
+thead tr th
+  position: sticky
+  z-index: 1
+
+thead tr:first-child th
+  top: 0
+
+// q-tabs
+.q-tabs
+  border-bottom: 1px solid $utility-divider
+
+  .q-tab--active
+    color: $primary-3
+    @extend .t-body-bold
+
+  .q-tab--inactive
+    color: $text-secondary
+
+  .q-tab__indicator
+    height: 4px !important
+
+.q-dialog__backdrop
+  background: rgba(0, 0, 0, 0.6) !important
+  backdrop-filter: blur(2px)
+
+.custom_toggle
+  .q-toggle__inner
+    width: 0.8em
+    min-width: 0.8em
+    height: 0.5em
+    padding: 0 !important
+
+  .q-toggle__track
+    height: 100% !important
+    border-radius: 0.5em !important
+
+  .q-toggle__thumb
+    height: 0.4em !important
+    width: 0.4em !important
+    top: 0.05em !important
+    left: 0.05em !important
+
+  .q-toggle__inner--truthy .q-toggle__thumb
+    left: 0.35em !important
+
+  .q-toggle__inner--indet .q-toggle__thumb
+    left: 0.2em !important
+
+.map.app-map
+  .gm-style
+    z-index: 7000 !important
+
+// customize scrollbar
+::-webkit-scrollbar
+  width: 6px
+  height: 6px
+
+::-webkit-scrollbar-track
+  background-color: $neutral-100
+
+::-webkit-scrollbar-thumb
+  background-color: $neutral-200
+  border-radius: 4px
+
+// hide number input spinner
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
+  margin: 0
+
+input[type=number]
+  -moz-appearance: textfield
+
+.table-group
+  overflow: hidden
+  @extend .br-sm
+
+  .group-header
+    background-color: $neutral-100
+    padding: 8px 16px
+    @extend .t-body-bold
+
+  .group-items > div
+    border-top: 1px solid $utility-divider
+
+  .group-items
+    .group-item
+      padding: 10px 16px

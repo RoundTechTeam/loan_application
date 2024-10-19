@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// generator zod {
+//   provider                         = "zod-prisma-types"
+//   output                           = "../libs/entities/zod/generated"
+//   addSelectType                    = "false"
+//   addIncludeType                   = "true"
+//   createOptionalDefaultValuesTypes = "false"
+//   createInputTypes                 = "false"
+//   createModelTypes                 = "true"
+//   addInputTypeValidation           = "false"
+//   createRelationValuesTypes        = "false"
+//   validateWhereUniqueInput         = "false"
+//   useDefaultValidators             = "true"
+//   coerceDate                       = "false"
+//   createPartialTypes               = "false"
+//   writeBarrelFiles                 = "false"
+//   useMultipleFiles                 = "false"
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ECountryCodeP {
+  MY
+  SG
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  full_name       String            @db.VarChar(255)
+  password        String            @db.Text
+  contact_no      String            @db.VarChar(255)
+  country_code    ECountryCodeP     @default(MY)
+  is_admin        Boolean           @default(false)
+  is_delete       Boolean           @default(false)
+  created_at      DateTime          @default(now())
+  updated_at      DateTime?         @updatedAt
+  Sessions        UserSession[]
+  LoanApplication LoanApplication[]
+  FundManager     FundManager?
+
+  @@map("users")
+}
+
+model UserSession {
+  id         Int       @id @default(autoincrement())
+  token      String    @unique @db.VarChar(600)
+  user_id    Int
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  User       User      @relation(fields: [user_id], references: [id])
+
+  @@index([token])
+  @@map("user_sessions")
+}
+
+model Business {
+  id                  Int               @id @default(autoincrement())
+  name                String            @db.VarChar(255)
+  incorporation_date  DateTime          @db.Date
+  is_verified         Boolean
+  address             String            @db.VarChar(255)
+  type                String            @db.VarChar(255)
+  is_malaysia_company Boolean           @default(true)
+  created_at          DateTime          @default(now())
+  updated_at          DateTime?         @updatedAt
+  FinancialRecord     FinancialRecord[]
+
+  @@map("businesses")
+}
+
+model Director {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(255)
+  ic         String    @db.VarChar(255)
+  address    String    @db.VarChar(255)
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@map("directors")
+}
+
+model FinancialRecord {
+  id                Int       @id @default(autoincrement())
+  business_id       Int
+  year              Int
+  revenue           Float     @default(0)
+  retained_earnings Float     @default(0)
+  Business          Business  @relation(fields: [business_id], references: [id])
+  created_at        DateTime  @default(now())
+  updated_at        DateTime? @updatedAt
+
+  @@map("financial_records")
+}
+
+model FundManager {
+  id              Int               @id @default(autoincrement())
+  user_id         Int               @unique
+  maximum_fund    Float
+  created_at      DateTime          @default(now())
+  updated_at      DateTime?         @updatedAt
+  User            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  LoanApplication LoanApplication[]
+
+  @@map("fund_managers")
+}
+
+model LoanApplication {
+  id                   Int          @id @default(autoincrement())
+  user_id              Int
+  fund_manager_id      Int?
+  loan_applied_at      DateTime?
+  approved_at          DateTime?
+  rejected_at          DateTime?
+  approved_loan_amount Float        @default(0)
+  applied_by           User?        @relation(fields: [user_id], references: [id])
+  processed_by         FundManager? @relation(fields: [fund_manager_id], references: [id])
+  created_at           DateTime     @default(now())
+  updated_at           DateTime?    @updatedAt
+
+  @@map("loan_applications")
+}
+
+model Loan {
+  id                     Int       @id @default(autoincrement())
+  name                   String    @db.VarChar(255)
+  start_at               DateTime  @db.Date
+  end_at                 DateTime  @db.Date
+  miminum_loan_amount    Float
+  maximum_loan_amount    Float
+  min_operation_year     Int
+  valid_company_type     String    @db.VarChar(255)
+  min_annual_sales       Float
+  is_malaysia_company    Boolean   @default(true)
+  instalment_tenure_year Int
+  interest_rate          Float
+  created_at             DateTime  @default(now())
+  updated_at             DateTime? @updatedAt
+
+  @@map("loans")
+}
