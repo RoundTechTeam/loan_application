@@ -72,7 +72,7 @@ model UserSession {
   user_id    Int
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
-  User       User      @relation(fields: [user_id], references: [id])
+  User       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([token])
   @@map("user_sessions")

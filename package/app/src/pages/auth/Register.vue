@@ -59,7 +59,7 @@ async function signUp() {
         (window as any).Login?.postMessage(user.token);
         if (user.currentUser) {
           router.push({
-            name: AppRoute.Dashboard,
+            name: AppRoute.UserDashboard,
             query: {
               alias: route.query.alias,
             },
@@ -70,7 +70,7 @@ async function signUp() {
     {
       isLoading: loading,
       message: 'Signing you in',
-      successMessage: 'Welcome to DREAMZTRACK!',
+      successMessage: 'Welcome to Demo!',
     }
   );
 }
@@ -214,7 +214,7 @@ async function signUp() {
                   <div class="full-width q-pt-md">
                     <PrimaryButton
                       color="primary"
-                      label="Create your DREAMZTRACK Account"
+                      label="Create your Demo Account"
                       type="submit"
                       text-color="white"
                       :loading="loading"

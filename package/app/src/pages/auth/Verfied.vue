@@ -40,7 +40,7 @@ async function signUp() {
     {
       isLoading: loading,
       message: 'Signing you in',
-      successMessage: 'Welcome to DREAMZTRACK!',
+      successMessage: 'Welcome to Demo!',
     }
   );
 }
@@ -51,14 +51,14 @@ async function submit() {
     verificationCode: state.verificationCode,
   });
   router.push({
-    name: AppRoute.Dashboard,
+    name: AppRoute.UserDashboard,
   });
 
   console.log('verified', verified);
 
   if (verified) {
     router.push({
-      name: AppRoute.Dashboard,
+      name: AppRoute.UserDashboard,
     });
     window.location.reload();
   }

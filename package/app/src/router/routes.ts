@@ -29,18 +29,18 @@ export enum AppRoute {
 
 function authGuard(): true | string {
   const user = useUserStore();
-  console.log('AuthorizedGuard - user.isLoggedIn', user.isLoggedIn);
-  console.log(
-    'AuthorizedGuard - user.currentUser.is_verified',
-    user.isVerified
-  );
+  console.log('AuthGuard - user.isLoggedIn', user.isLoggedIn);
+  console.log('AuthGuard - user.currentUser.is_verified', user.isVerified);
   if (!user.isLoggedIn) return AppRoute.Login;
   console.log('Guard: Logged In but not Verified');
   if (!user.isVerified) return AppRoute.Verified;
+
   return true;
 }
 
 function adminGuard(): true | string {
+  console.log('AdminGuard - user.isLoggedIn');
+
   const user = useUserStore();
   if (!user.isAdmin) return AppRoute.UserDashboard;
 
@@ -56,6 +56,7 @@ function authorizedGuard(): true | string {
   );
 
   if (user.isLoggedIn) {
+    if (user.isAdmin) return AppRoute.AdminDashboard;
     if (!user.isVerified) {
       return AppRoute.Verified;
     }
@@ -168,7 +169,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/auth/Register.vue'),
   },
   {
-    path: '/verfied',
+    path: '/verified',
     name: AppRoute.Verified,
     meta: {
       guards: [authorizedGuard],

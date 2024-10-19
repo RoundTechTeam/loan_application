@@ -24,9 +24,8 @@ export const useUserStore = defineStore('user', {
 
         if (fetchUser?.id) {
           this.currentUser = fetchUser;
-          this.isVerified = true;
-          // this.isVerified = fetchUser.is_verified;
-          // this.isAdmin = fetchUser.is_admin;
+          this.isVerified = fetchUser.is_verified;
+          this.isAdmin = fetchUser.is_admin;
           this.connectionLost = false;
         }
       } catch (e) {
