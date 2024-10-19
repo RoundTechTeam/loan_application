@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { useUserStore } from 'src/stores/user';
 import Loan from './Loan';
+import Store from './Store';
 import User from './User';
 export class ApiError extends Error {
   constructor(public readonly statusCode: number, message?: string) {
@@ -53,4 +54,5 @@ export const Api = {
   },
   User,
   Loan,
+  Store,
 };

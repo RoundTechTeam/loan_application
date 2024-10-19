@@ -33,4 +33,13 @@ const filter = {
   },
 };
 
-export { filter, randomString, uuid };
+function slugify(v: string) {
+  return v
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export { filter, randomString, slugify, uuid };

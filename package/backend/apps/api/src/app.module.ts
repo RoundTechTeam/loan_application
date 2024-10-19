@@ -8,6 +8,7 @@ import { GlobalModule } from './global.module';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { LoanModule } from './loan/loan.module';
 import { UserModule } from './user/user.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module';
     GlobalModule,
     UserModule,
     LoanModule,
+    StorageModule,
     // WorkerModule,
     AiGeneratorModule,
   ],
