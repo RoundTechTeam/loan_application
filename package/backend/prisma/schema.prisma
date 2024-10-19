@@ -81,7 +81,7 @@ model UserSession {
 model Business {
   id                  Int               @id @default(autoincrement())
   name                String            @db.VarChar(255)
-  incorporation_date  DateTime          @db.Date
+  incorporation_date  DateTime
   is_verified         Boolean
   address             String            @db.VarChar(255)
   type                CompanyType
@@ -151,8 +151,8 @@ model LoanApplication {
 model Loan {
   id                     Int               @id @default(autoincrement())
   name                   String            @db.VarChar(255)
-  start_at               DateTime          @db.Date
-  end_at                 DateTime          @db.Date
+  start_at               DateTime
+  end_at                 DateTime
   mininum_loan_amount    Float
   maximum_loan_amount    Float
   min_operation_year     Int

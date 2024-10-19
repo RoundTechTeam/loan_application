@@ -16,11 +16,17 @@ export class LoanService {
     });
     if (existedLoan) throw new BadRequestException('Loan already exists');
 
+    console.log('dto', dto.start_at);
+    console.log('dto', dto.end_at);
+
+    console.log('dto', new Date(dto.start_at));
+    console.log('dto', new Date(dto.end_at));
+
     await db.loan.create({
       data: {
         name: dto.name,
-        start_at: dto.start_at,
-        end_at: dto.end_at,
+        start_at: new Date(dto.start_at),
+        end_at: new Date(dto.end_at),
         mininum_loan_amount: dto.mininum_loan_amount,
         maximum_loan_amount: dto.maximum_loan_amount,
         min_operation_year: dto.min_operation_year,

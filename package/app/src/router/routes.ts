@@ -42,6 +42,7 @@ function adminGuard(): true | string {
   console.log('AdminGuard - user.isLoggedIn');
 
   const user = useUserStore();
+  if (!user.isLoggedIn) return AppRoute.Login;
   if (!user.isAdmin) return AppRoute.UserDashboard;
 
   return true;
