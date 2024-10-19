@@ -11,7 +11,7 @@ export class AuthController {
 
   @Get('profile')
   async getProfile(@Req() req: Request) {
-    return req.User;
+    return req.user;
   }
 
   @Post('login')
@@ -21,5 +21,10 @@ export class AuthController {
   ): Promise<ApiResponse<{ token: string }>> {
     const token = await this.userService.login(dto);
     return { success: true, data: { token } };
+  }
+
+  @Post('logout')
+  async logout(@Req() req: Request) {
+    await this.userService.logout(req.token);
   }
 }

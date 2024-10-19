@@ -54,4 +54,8 @@ export class UserService {
     });
     return token;
   }
+
+  async logout(token: string) {
+    return db.userSession.delete({ where: { token: token } });
+  }
 }
