@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: AppRoute.Dashboard,
-        component: () => import('pages/Dashboard.vue'),
+        component: () => import('pages/dashboard/Index.vue'),
       },
     ],
   },

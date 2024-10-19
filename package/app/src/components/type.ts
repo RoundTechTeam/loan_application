@@ -1,3 +1,4 @@
+import { AppRoute } from 'src/router/routes';
 import { DefineComponent } from 'vue';
 
 export type InputModel = string | number | boolean | null;
@@ -89,4 +90,13 @@ export interface MoreActionOption {
   disable?: boolean | string;
   hide?: boolean;
   callback: () => Promise<void>;
+}
+
+export interface NavigationItem {
+  title: string;
+  icon: string;
+  route?: AppRoute | (() => Promise<void> | void);
+  query?: Record<string, string | number | boolean>;
+  subItems?: NavigationItem[];
+  hide?: boolean;
 }

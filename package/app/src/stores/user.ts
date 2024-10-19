@@ -42,6 +42,9 @@ export const useUserStore = defineStore('user', {
           password,
         });
         this.token = resp.data.token;
+
+        console.log('this.token', this.token);
+
         await this.refetch();
       } catch (e) {
         if (e instanceof ApiError) {
