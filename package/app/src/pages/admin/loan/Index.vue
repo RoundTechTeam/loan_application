@@ -8,7 +8,7 @@ import { useLoading } from 'src/composable';
 import { prompt } from 'src/plugins';
 import { computed, onMounted, ref } from 'vue';
 import { dateFormat, Loan } from '~libs/entities';
-import LoanDialog from './dialog/LoanDialog.vue';
+import LoanDialog from './dialog/LoanDiaog.vue';
 
 const { loading, run, toast } = useLoading();
 
