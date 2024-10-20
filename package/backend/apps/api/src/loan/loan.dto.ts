@@ -77,7 +77,7 @@ export class LoanApplicationDto
       | 'business_name'
       | 'company_type'
       | 'is_malaysia_company'
-      | 'file_image_path'
+      | 'file_path'
     >
 {
   @IsNumber()
@@ -91,7 +91,7 @@ export class LoanApplicationDto
 
   @IsString()
   @IsNotEmpty()
-  file_image_path: string;
+  file_path: string;
 
   @IsNumber()
   @Type(() => Number)

@@ -11,8 +11,8 @@ import { useUserStore } from 'src/stores/user';
 import { computed, onMounted, ref } from 'vue';
 import { dateTimeFormat, LoanApplicationDetail } from '~libs/entities';
 import { ApplicationStatus } from '~libs/entities/enums';
-import LoanApplicationDialog from './LoanApplicationDialog.vue';
 import { formatCurrency } from '~libs/helpers';
+import LoanApplicationDialog from './LoanApplicationDialog.vue';
 
 const { run, loading } = useLoading();
 const user = useUserStore();
@@ -45,6 +45,11 @@ const columns = computed<TableColumn<LoanApplicationDetail>[]>(() => [
     name: 'business_name',
     label: 'Business Name',
     field: (v) => v.business_name,
+  },
+  {
+    name: 'view',
+    label: 'View',
+    field: (v) => v.file_path,
   },
   {
     name: 'username',
@@ -93,6 +98,10 @@ function getStatusColor(status: ApplicationStatus) {
   }
 }
 
+function goToUrl(url: string) {
+  window.open(url, '_blank');
+}
+
 function fetchLoanApplications() {
   run(
     async () => {
@@ -121,6 +130,25 @@ onMounted(() => fetchLoanApplications());
         <template #actions="{ row }">
           <q-td>
             <IconButton @click="viewApplication(row)" icon="edit" />
+          </q-td>
+        </template>
+
+        <template #view="v">
+          <q-td>
+            <icon-button
+              v-if="v.value"
+              icon="visibility"
+              color="primary"
+              size="md"
+              @click="goToUrl(v.value)"
+            />
+            <icon-button
+              v-else
+              icon="visibility_off"
+              color="grey"
+              size="md"
+              disable
+            />
           </q-td>
         </template>
 

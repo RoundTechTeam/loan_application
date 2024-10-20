@@ -39,6 +39,7 @@ export class LoanService {
         valid_company_type: dto.valid_company_type,
         min_annual_sales: dto.min_annual_sales,
         is_malaysia_company: dto.is_malaysia_company,
+
         instalment_tenure_year: dto.instalment_tenure_year,
         interest_rate: dto.interest_rate,
       },
@@ -52,6 +53,7 @@ export class LoanService {
         company_type: dto.company_type,
         is_malaysia_company: dto.is_malaysia_company,
         annual_sales: dto.annual_sales,
+        file_path: dto.file_path,
         operation_year: dto.operation_year,
         loan_applied_at: new Date(),
         applied_by: {

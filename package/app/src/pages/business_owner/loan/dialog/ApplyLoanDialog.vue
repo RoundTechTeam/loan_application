@@ -12,7 +12,7 @@ import {
 } from 'src/components';
 import { useDialog, useFile, useLoading } from 'src/composable';
 import { notify, prompt } from 'src/plugins';
-import { PropType, ref } from 'vue';
+import { computed, PropType, ref } from 'vue';
 import { Vue3Lottie } from 'vue3-lottie';
 import { LoanApplicationDto } from '~api/loan/loan.dto';
 import { Loan } from '~libs/entities';
@@ -39,10 +39,25 @@ const state = ref<LoanApplicationDto>({
   loan_id: props.loan.id,
   operation_year: 0,
   business_name: '',
-  file_image_path: '',
+  file_path: '',
 });
 
-const test = ref('');
+const result = computed<string>(() => {
+  const isAnnualSalesPass =
+    state.value.annual_sales >= props.loan.min_annual_sales;
+
+  const isOperationYearPass =
+    state.value.operation_year >= props.loan.min_operation_year;
+
+  const isCompanyTypePass =
+    state.value.company_type === props.loan.valid_company_type;
+
+  if (isAnnualSalesPass && isOperationYearPass && isCompanyTypePass) {
+    return 'Qualification Passed';
+  } else {
+    return 'Qualification Failed';
+  }
+});
 
 async function aiScanDocument() {
   if (!company_document_file.file.value) return;
@@ -50,13 +65,13 @@ async function aiScanDocument() {
   if (company_document_file.file.value) {
     const [url] = await Api.Store.upload([company_document_file.file.value]);
 
-    state.value.file_image_path = url;
+    state.value.file_path = url;
   }
 
   toast(
     async () => {
       loaded.value = true;
-      const result = await Api.Loan.aiScanDocument(state.value.file_image_path);
+      const result = await Api.Loan.aiScanDocument(state.value.file_path);
 
       if (result) {
         state.value.business_name = result['Company Name'];
@@ -176,7 +191,17 @@ async function submit() {
     </div>
 
     <template #actions>
-      <PrimaryButton v-if="!loaded" label="Submit" type="submit" />
+      <div class="row items-center q-gutter-x-md" v-if="!loaded">
+        <div
+          class="text-bold"
+          :style="{
+            color: result === 'Qualification Passed' ? 'green' : 'red',
+          }"
+        >
+          Result: {{ result }}
+        </div>
+        <PrimaryButton label="Submit" type="submit" />
+      </div>
     </template>
   </GlobalDialog>
 </template>
