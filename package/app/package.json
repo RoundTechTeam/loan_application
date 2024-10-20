@@ -26,7 +26,8 @@
     "vue": "^3.3.13",
     "vue-router": "^4.2.5",
     "vue-sonner": "^1.1.2",
-    "vue-country-flag-next": "^2.3.2"
+    "vue-country-flag-next": "^2.3.2",
+    "vue3-lottie": "^3.3.0"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.6.0",

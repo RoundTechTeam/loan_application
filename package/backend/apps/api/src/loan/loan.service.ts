@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import fs from 'fs/promises';
+import Groq from 'groq-sdk';
 import OpenAI from 'openai';
 import path from 'path';
 import pdfPoppler from 'pdf-poppler';
@@ -65,6 +66,72 @@ export class LoanService {
         },
       },
     });
+  }
+
+  async sendTogGroq(text: string) {
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
+
+    const importantInfo = [
+      'Company Name',
+      'Company Incorporation Date',
+      'Company Type',
+      'Retain Earning',
+      'Revenue',
+    ];
+
+    let completion;
+    const aiModels = ['gemma2-9b-it', 'llama3-8b-8192'];
+    let count = 0;
+    const maxTries = 2;
+    while (count < 2) {
+      try {
+        completion = await groq.chat.completions.create({
+          temperature: 0.5,
+          response_format: {
+            type: 'json_object',
+          },
+          messages: [
+            {
+              role: 'system',
+              content: `
+                  You are an AI assistant that help to find the important information from the ${text}.
+
+                  ##Important
+                  I have few important information that I need to get from the ${text}.
+                  ${importantInfo.map((info) => `1. ${info}`).join('\n')}
+
+                  ##Response
+                  Please provide me the important information from the ${text}.
+
+                  ##Extra Part
+                  when assign Type please choose from the following list:
+                 1."PRIVATE_LIMITED",
+                 2."SOLE_PROPRIETORSHIP",
+                 3"PARTNERSHIP",
+
+                  ##Result
+                  Object Key must follow ${importantInfo.join(',')}
+                  Must be return the result JSON format. Dont return any other text.
+                  Just return the result Json no need add title or anything else.
+                  
+              
+                  `,
+            },
+          ],
+          model: aiModels[count],
+        });
+
+        console.log(completion.choices[0].message.content);
+
+        if (completion) return completion.choices[0].message.content as string;
+      } catch (e) {
+        count = count + 1;
+        if (count === maxTries) throw e;
+      }
+    }
+    if (!completion) return;
   }
 
   async sendToChatGpt(text: string) {
@@ -209,7 +276,7 @@ export class LoanService {
       });
     }
 
-    const resp = await this.sendToChatGpt(textToSubmit.join(','));
+    const resp = await this.sendTogGroq(textToSubmit.join(','));
 
     return resp;
   }

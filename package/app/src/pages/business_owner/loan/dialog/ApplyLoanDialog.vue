@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { capitalCase } from 'change-case';
+import dayjs from 'dayjs';
 import { Api } from 'src/api';
+import scanDocument from 'src/assets/animation/scanDocu,ent.json';
 import {
   AppForm,
   DropdownInput,
@@ -11,6 +13,7 @@ import {
 import { useDialog, useFile, useLoading } from 'src/composable';
 import { notify, prompt } from 'src/plugins';
 import { PropType, ref } from 'vue';
+import { Vue3Lottie } from 'vue3-lottie';
 import { LoanApplicationDto } from '~api/loan/loan.dto';
 import { Loan } from '~libs/entities';
 import { CompanyType } from '~libs/entities/enums';
@@ -23,7 +26,7 @@ const props = defineProps({
 });
 
 const { dialogRef, emitData } = useDialog();
-const { loading, toast } = useLoading();
+const { loading, toast, loaded } = useLoading();
 const company_document_file = useFile({
   extensions: ['jpg', 'jpeg', 'png', 'pdf'],
   maxBytes: 1000000,
@@ -39,7 +42,7 @@ const state = ref<LoanApplicationDto>({
   file_image_path: '',
 });
 
-const test = ref([]);
+const test = ref('');
 
 async function aiScanDocument() {
   if (!company_document_file.file.value) return;
@@ -50,17 +53,27 @@ async function aiScanDocument() {
     state.value.file_image_path = url;
   }
 
-  const result = await Api.Loan.aiScanDocument(state.value.file_image_path);
+  toast(
+    async () => {
+      loaded.value = true;
+      const result = await Api.Loan.aiScanDocument(state.value.file_image_path);
 
-  const regex = /\{([^}]+)\}/g;
-  const matches = [];
-  let match;
+      if (result) {
+        state.value.business_name = result['Company Name'];
+        state.value.company_type = result['Company Type'];
 
-  while ((match = regex.exec(result)) !== null) {
-    matches.push(match[1]);
-  }
+        const date = new Date(result['Company Incorporation Date']);
+        state.value.operation_year = dayjs().year() - date.getFullYear();
 
-  test.value = matches;
+        state.value.annual_sales = result['Retain Earning'];
+      }
+      loaded.value = false;
+    },
+    {
+      isLoading: loading,
+      successMessage: 'Document scanned successfully',
+    }
+  );
 }
 
 async function submit() {
@@ -93,10 +106,11 @@ async function submit() {
     ref="dialogRef"
     title="Apply Loan"
     padding="md"
+    position="right"
     @submit="submit"
   >
-    <div class="q-gutter-y-md">
-      {{ test }}
+    <Vue3Lottie v-if="loaded" id="Vue3Lottie" :animationData="scanDocument" />
+    <div v-else class="q-gutter-y-md">
       <AppForm title="Loan Name">
         <div>{{ loan.name }}</div>
       </AppForm>
@@ -162,7 +176,7 @@ async function submit() {
     </div>
 
     <template #actions>
-      <PrimaryButton label="Submit" type="submit" />
+      <PrimaryButton v-if="!loaded" label="Submit" type="submit" />
     </template>
   </GlobalDialog>
 </template>

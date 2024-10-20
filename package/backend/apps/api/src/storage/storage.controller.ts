@@ -65,6 +65,7 @@ export class StorageController {
             },
             true,
           );
+
           return url;
         } catch (e) {
           console.log('e', e);
